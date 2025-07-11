@@ -265,3 +265,93 @@ footer{
 .rcount{margin-left:6px;font-size:11px;color:#71717A}
 .stock{font-size:11px;font-weight:600;color:#22C55E}
 @media (max-width:400px){.card{width:90%}.title{font-size:16px}.img{height:180px}.bottom{flex-direction:column;align-items:flex-start;gap:10px}.price{margin-bottom:5px}.btn{width:100%;justify-content:center}}
+
+
+/* LOGIN */
+.formcontainer {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    margin: 70px auto; 
+    width: auto;
+    max-width: 825px;  
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.form-box h2 {
+    margin: 0;
+    text-align: center;
+}
+  
+.form-box p {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+  
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.flex-row {
+    display: flex;
+    gap: 10px;
+}
+  
+.flex-row input {
+    flex: 1;
+}
+  
+.captcha-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 15px 0;
+    border-radius: 5px;
+}
+  
+.btn-green {
+    background-color: #74C86D;
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+  
+.btn-green:hover {
+    background-color: #45a049;
+}
+  
+.btn-gray {
+    background-color: #D9D9D9;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+  
+.btn-gray:hover {
+    background-color: #c0c0c0;
+}
+
+hr {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid #ccc;
+}
