@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<main>
+    <!-- Carrossel -->
+    <!-- <section>
+        {% include 'components/carrossel.html' %}
+    </section> -->
+
+    <!-- Mais comprados -->
+    <section id="mais_c">
+        <h2 id="">Mais Comprados</h2>
+        <div class="card_container">
+            {% include 'components/card.html' %}
+            {% include 'components/card.html' %}
+            {% include 'components/card.html' %}
+            {% include 'components/card.html' %}
+        </div>
+    </section>
+
+    <!-- Melhor avaliados -->
+    <section id="mais_a">
+        <h2 id="">Melhor Avaliados</h2>
+        <div class="card_container">
+            {% include 'components/card.html' %}
+            {% include 'components/card.html' %}
+            {% include 'components/card.html' %}
+            {% include 'components/card.html' %}
+        </div>
+    </section>
+
+    <!-- Novidades -->
+    <section id="novidades">
+        <h2 id="">Novidades</h2>
+        <div class="card_container">
+            {% include 'components/card.html' %}
+            {% include 'components/card.html' %}
+            {% include 'components/card.html' %}
+            {% include 'components/card.html' %}
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,67 @@
+
+
+
+div#carouselExampleAutoplaying{
+    margin-bottom: 5%;
+    margin-left: 8%;
+    width: 84%;
+    
+}
+
+.comprado{
+    background-color: #FF9B40;
+    width: 86%;
+    margin-left: 7%;
+    height: 6vh;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    padding-left: 2%;
+}
+#mC{
+    color: white;
+    font-size: x-large;
+}
+
+.avaliacao{
+    background-color: #FF8618;
+    width: 86%;
+    margin-left: 7%;
+    height: 6vh;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    padding-left: 2%;
+}
+#mA{
+    color: white;
+    font-size: x-large;
+}
+
+.novidade{
+    background-color: #D26A0B;
+    width: 86%;
+    margin-left: 7%;
+    height: 6vh;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    padding-left: 2%;
+}
+#novi{
+    color: white;
+    font-size: x-large;
+}
+
+.card_container{
+    width: 84%;
+    margin-left: 8%;
+    margin-top: 4%;
+    margin-bottom: 4%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+
