@@ -22,6 +22,6 @@ from rexapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home),
-    path('home', views.detalhar),
+    path('', views.home, name= 'produto'),
+    path('produto/<int:id>/', views.detalhar, name='detalhar_produto'),
 ]
