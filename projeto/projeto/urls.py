@@ -23,5 +23,5 @@ from rexapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home),
-    path('home.html/', views.detalhar),
+    path('home', views.detalhar),
 ]
