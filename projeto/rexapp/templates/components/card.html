@@ -1,50 +1,32 @@
-
 {% load static %}
 
+{% for x in produtos %}
+<div class="card">
+    <div class="top-card">
+        <a href="{% url 'detalhar_produto' x.id %}">
+            <img class="card-image" src= '/media/{{x.imagem_url}}' alt="Premium Laptop">
+        </a>
+        <div class="nome">{{x.nome}}</div>
+        <div class="categoria">{{x.Categoria_id}}</div>
+        <div class="especificacao">{{x.especificacao}}</div>
+        <div class="preco">R$ {{x.preco}}</div>
+    </div>
 
-
-
-
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/card.css' %}">
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
-    <title>Document</title>
-  </head>
-  <body>
-        {% for x in produtos %}
-
-            <div class="card">
-              <div class="tilt">
-              <div class="img"><img src="{% static 'imagens\coringa.png' %}" alt="Premium Laptop"></div>
-              </div>
-              <div class="info">
-              <div class="cat">{{x.categoria}}</div>
-              <h2 class="title">{{x.nome}}</h2>
-              <div class="bottom">
-                <div class="price">
-                <span class="new">{{x.preco}}</span>
-                </div>
-                <button class="btn">
-                <span>+</span>
-                <img class="icon" src="{% static 'imagens\carrinho.png' %}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                </button>
-              </div>
-              <div class="meta">
-                <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" stroke-width="0.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" stroke-width="0.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" stroke-width="0.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" stroke-width="0.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" stroke-width="0.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                </div>
-              </div>
-          </div>
-        {% endfor %}
-  </body>
-</html>
-
+  <div class="bottom-card">
+      <div class="rating">
+          {% for i in "12345" %}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" stroke-width="0.5">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+          {% endfor %}
+      </div>
+      <button class="btn">
+          <span>+</span>
+          <img class="icon_card" src='static/imagens/carrinho_produto.png' height="20px" width="20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+      </button>
+  </div>
+</div>
+{% endfor %}

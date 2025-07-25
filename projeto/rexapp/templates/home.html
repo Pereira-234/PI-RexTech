@@ -1,30 +1,26 @@
 {% extends "base.html" %}
-
 {% block conteudo %}
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
 </head>
 <body>
     <main>
         <!-- Carrossel -->
-        <!-- <section>
+        <section >
             {% include 'components/carrossel.html' %}
-        </section> -->
+        </section>
     
         <!-- Mais comprados -->
         <section id="mais_c">
             <h2 id="mC" class="comprado">Mais Comprados</h2>
             <div class="card_container">
                 {% include 'components/card.html' %}
-    
             </div>
         </section>
     
@@ -33,7 +29,6 @@
             <h2 id="mA" class="avaliacao">Melhor Avaliados</h2>
             <div class="card_container">
                 {% include 'components/card.html' %}
-    
             </div>
         </section>
     
@@ -42,12 +37,9 @@
             <h2 id="novi" class="novidade">Novidades</h2>
             <div class="card_container">
                 {% include 'components/card.html' %}
-                {% include 'components/card.html' %}
             </div>
         </section>
     </main>
 </body>
 </html>
-
-
 {% endblock %}
