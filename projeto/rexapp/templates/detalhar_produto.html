@@ -2,19 +2,20 @@
 {% block conteudo %}
 {% load static %}
 
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes do Produto - Galinha de Brinquedo</title>
+    <title>Detalhes do Produto - {{Produto.nome}}</title>
 </head>
 <body>
 
     <main>
         <div class="product-detail-container">
             <div class="product-images">
-                <img src="imagens/notebook_principal.png" alt="Galinha de Brinquedo" class="main-image" id="mainProductImage">
+                <img class= "main-image" src= '/media/{{produto.imagem_url}}' alt="Premium Laptop">
                 <div class="thumbnail-images">
                     <img src="imagens/notebook_principal.png" alt="Miniatura 1" onclick="changeMainImage('imagens/notebook_principal.png')">
                     <img src="imagens/notebook_minuatura_2.png" alt="Miniatura 2" onclick="changeMainImage('imagens/notebook_minuatura_2.png')">
@@ -23,9 +24,9 @@
             </div>
 
             <div class="product-info">
-                <h1 class="product-title">Galinha de Brinquedo</h1>
-                <p class="product-price">R$69,00</p>
-                <p class="product-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis volutpat blandit enim, at ultricies mlerisque diam. Phasellus consectetur lorem sed sem venenatis, quis vulputate ipsum auctor. Nulla facilisi. Proin id libero nulla. Aenean non purus quis nisl consectetur volutpat. Curabitur vel turpis eu magna accumsan eleifend in et odio. Ut tincidunt, nunc non bibendum mollis, enim felis tristique nulla, sit amet euismod quam nisi non sapien. Nullam ac ante nec risus consectetur euismod. Praesent feugiat justo vel mauris auctor, in ultrices ipsum auctor. Etiam tincidunt enim at quam malesuada dignissim. Duis non bibendum ligula. Sed non elit at quam tincidunt v</p>
+                <h1 class="product-title">{{produto.nome}}</h1>
+                <p class="product-price">{{produto.preco}}</p>
+                <p class="product-description">{{produto.especificacoes}}</p>
                 <button class="add-to-cart-btn">
                     <span>ADICIONAR AO CARRINHO</span>
                     <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

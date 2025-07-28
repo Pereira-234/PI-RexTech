@@ -22,6 +22,6 @@ def home(request):
     }
     return render(request, "home.html", context = context)
 
-def detalhar(request, id: int):
+def detalhar(request, id):
     produto = get_object_or_404(Produto, pk=id)
     return render(request, "detalhar_produto.html", {'produto': produto})
