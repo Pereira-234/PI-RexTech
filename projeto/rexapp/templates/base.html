@@ -1,52 +1,56 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RexTech</title>  
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/card.css' %}">
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
-    <link rel="stylesheet" href="{% static 'css/detalhar_produto.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RexTech</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/card.css' %}">
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/detalhar_produto.css' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
 </head>
+
 <body>
   <!-- Cabeçalho com menu de navegação -->
   <header>
     <div class="logo">
-      <a href="{% url 'home' %}" id="logo_r"><img src="{% static 'imagens\logo_header.png' %}" alt="Logo" width= "60px" ></a>
+      <a href="{% url 'home' %}" id="logo_r"><img src="{% static 'imagens\logo_header.png' %}" alt="Logo"
+          width="60px"></a>
     </div>
     <div class="menu_meio">
       <form class="pesquisa">
-          <input id="pesq" type="text" placeholder="Pesquisar">
-          <button type="submit"><img src="{% static 'imagens\lupa.png' %}" alt="Pesquisar"></button>
+        <input id="pesq" type="text" placeholder="Pesquisar">
+        <button type="submit"><img src="{% static 'imagens\lupa.png' %}" alt="Pesquisar"></button>
       </form>
       <nav>
-          <ul>
-              <li><a href="#">Hardware</a></li>
-              <li><a href="#">Software</a></li>
-              <li><a href="#">Sobre nós</a></li>
-              <li><a href="#">Notebooks</a></li>
-          </ul>
+        <ul>
+          <li><a href="#">Hardware</a></li>
+          <li><a href="#">Software</a></li>
+          <li><a href="#">Sobre nós</a></li>
+          <li><a href="#">Notebooks</a></li>
+        </ul>
       </nav>
     </div>
     <div class="icons">
-      <a href="login.html" class="icon"><img src="{% static 'imagens\conta_header.png' %}" alt="1" width="40px" >Entrar</a>
-      <a href="carrinho.html" class="icon"><img src="{% static 'imagens\carrinho_header.png' %}" alt="1" width="40px" >Carrinho</a>
-    </div> 
+      <a href="login.html" class="icon"><img src="{% static 'imagens\conta_header.png' %}" alt="1" width="40px">Entrar</a>
+      <a href="carrinho.html" class="icon"><img src="{% static 'imagens\carrinho_header.png' %}" alt="1" width="40px">Carrinho</a>
+    </div>
   </header>
 
   <main>
     <!-- Exibe mensagem de ERRO, caso tenha ocorrido algum -->
     {% if ERRO %}
-        <h3 class="erro">ERRO: {{ERRO}}</h3>
-    {% endif %}            
+    <h3 class="erro">ERRO: {{ERRO}}</h3>
+    {% endif %}
     <!-- Este bloco será utilizado para inserir o conteúdo das páginas.  -->
     <div id="conteudo">
-        {% block conteudo %}
-            Conteúdo da Página
-        {% endblock %}
+      {% block conteudo %}
+      Conteúdo da Página
+      {% endblock %}
     </div>
   </main>
 
@@ -54,26 +58,28 @@
   <footer>
     <div class="highfooter">
       <div class="IFRN">
-          <a href="https://portal.ifrn.edu.br"><img src="{% static 'imagens\ifrn_footer.png' %}" alt="Logo do IFRN" width="250px" ></a>
+        <a href="https://portal.ifrn.edu.br"><img src="{% static 'imagens\ifrn_footer.png' %}" alt="Logo do IFRN" width="250px"></a>
       </div>
       <div class="logo_f">
-          <a href="index.html"><img src="{% static 'imagens\logo_footer.png' %}"  alt="Logo da RexTech com degradê" width="50px"></a>
+        <a href="index.html"><img src="{% static 'imagens\logo_footer.png' %}" alt="Logo da RexTech com degradê" width="50px"></a>
       </div>
       <div class="icons_f">
-          <a href="https://www.google.com/maps" class="icon"><img src="{% static 'imagens\maps.png' %}" alt="Logo do Google Maps" width="20px"></a>
-          <a href="#" class="icon"><img src="{% static 'imagens\gmail.png' %}" alt="Logo do Gmail" width="35px"></a>
-          <a href="https://www.instagram.com" class="icon"><img src="{% static 'imagens\instagram.png' %}" alt="Logo do Instagram" width="35px"></a>
-          <a href="https://github.com/PI-InfoWeb-CNAT/PI-RexTech" class="icon"><img src="{% static 'imagens\github.png' %}" alt="Logo do Github" width="35px"></a> 
+        <a href="https://www.google.com/maps" class="icon"><img src="{% static 'imagens\maps.png' %}" alt="Logo do Google Maps" width="20px"></a>
+        <a href="#" class="icon"><img src="{% static 'imagens\gmail.png' %}" alt="Logo do Gmail" width="35px"></a>
+        <a href="https://www.instagram.com" class="icon"><img src="{% static 'imagens\instagram.png' %}" alt="Logo do Instagram" width="35px"></a>
+        <a href="https://github.com/PI-InfoWeb-CNAT/PI-RexTech" class="icon"><img src="{% static 'imagens\github.png' %}" alt="Logo do Github" width="35px"></a>
       </div>
     </div>
 
     <div class="subfooter">
-        <p id="desen">Desenvolvido pelo grupo RexTech</p> 
-        <a href="https://diatinf.ifrn.edu.br" id="diatinf"> <img src="{% static 'imagens\diatinf.png' %}" alt="Logo da DIATINF" width="40px" height="40px"></a>
-        <p id="copy">Copyright ©2025</p>
+      <p id="desen">Desenvolvido pelo grupo RexTech</p>
+      <a href="https://diatinf.ifrn.edu.br" id="diatinf"> <img src="{% static 'imagens\diatinf.png' %}"
+          alt="Logo da DIATINF" width="40px" height="40px"></a>
+      <p id="copy">Copyright ©2025</p>
     </div>
   </footer>
- 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 </body>
+
 </html>
