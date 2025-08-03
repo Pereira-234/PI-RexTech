@@ -3,8 +3,6 @@ from rexapp.models.Produto import Produto
 from rexapp.models.Categoria import Categoria
 from rexapp.models.Fabricante import Fabricante
 
-
-
 # Create your views here.
 
 def home(request):
