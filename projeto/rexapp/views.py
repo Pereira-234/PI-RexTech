@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from rexapp.models.Produto import Produto
 from rexapp.models.Categoria import Categoria
 from rexapp.models.Fabricante import Fabricante
+from rexapp.models.Imagem import Imagem
 
 # Create your views here.
 
@@ -22,4 +23,5 @@ def home(request):
 
 def detalhar(request, id):
     produto = get_object_or_404(Produto, pk=id)
-    return render(request, "detalhar_produto.html", {'produto': produto})
+    imagens = produto.imagens.all()  
+    return render(request, "detalhar_produto.html", {'produto': produto, 'imagens': imagens})

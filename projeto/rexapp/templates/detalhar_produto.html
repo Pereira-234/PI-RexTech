@@ -17,17 +17,14 @@
     <main>
         <div class="product-detail-container">
             <div class="product-images">
-                <img class="main-image" src='/media/{{produto.imagem_url}}' alt="Premium Laptop">
-
-                <!-- | adicionar miniaturas ao banco de dados depois |
+                <img id = 'main-image' class="main-image" src='/media/{{imagens.0.imagem}}' alt="Premium Laptop"> 
 
                 <div class="thumbnail-images">
-                    <img src="imagens/notebook_principal.png" alt="Miniatura 1" onclick="changeMainImage('imagens/notebook_principal.png')">
-                    <img src="imagens/notebook_minuatura_2.png" alt="Miniatura 2" onclick="changeMainImage('imagens/notebook_minuatura_2.png')">
-                    <img src="imagens/notebook_miniatura3.png" alt="Miniatura 3" onclick="changeMainImage('imagens/notebook_miniatura3.png')">
+                    <img src="/media/{{imagens.0.imagem}}" alt="Miniatura 1" onclick="changeMainImage('/media/{{imagens.0.imagem}}')">
+                    <img src="/media/{{imagens.1.imagem}}" alt="Miniatura 2" onclick="changeMainImage('/media/{{imagens.1.imagem}}')">
+                    <img src="/media/{{imagens.2.imagem}}" alt="Miniatura 3" onclick="changeMainImage('/media/{{imagens.2.imagem}}')">
                 </div>
-
-                 -->
+        
             </div>
 
             <div class="product-info">
@@ -86,10 +83,14 @@
         integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
         crossorigin="anonymous"></script>
     <script>
-        function changeMainImage(imageSrc) {
-            document.getElementById('mainProductImage').src = imageSrc;
+        function changeMainImage(src) {
+            const mainImage = document.getElementById('main-image');
+            if (mainImage) {
+                mainImage.src = src;
+          }
         }
     </script>
+          
 </body>
 
 </html>
