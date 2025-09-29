@@ -25,3 +25,6 @@ def detalhar(request, id):
     produto = get_object_or_404(Produto, pk=id)
     imagens = produto.imagens.all()  
     return render(request, "detalhar_produto.html", {'produto': produto, 'imagens': imagens})
+
+def hardware(request):
+    return render(request, "hardware.html")
