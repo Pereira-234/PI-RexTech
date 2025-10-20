@@ -1,18 +1,14 @@
 from django.db import models
-from rexapp.models.Produto import Produto
+from rexapp.models.Produto import Produto, rename_image
 import os
 import uuid 
 
 
-def rename_image(instance, filename):
-    # Extract the file extension
-    ext = filename.split('.')[-1]
-    # Generate a new unique filename
-    new_filename = f"{uuid.uuid4()}.{ext}"
-    # Define the upload path
-    return new_filename
+
 
 class Imagem(models.Model):
-    imagem = models.ImageField(null = False, blank= True, upload_to=rename_image)
+    imagem_url = models.ImageField(null = False, blank= True, upload_to=rename_image)
     produto = models.ForeignKey(Produto, on_delete=models.RESTRICT, related_name='imagens', null=True, blank=True)
+    
+
 
