@@ -26,4 +26,5 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('sign-up/', views.sign_up_view, name='sign-up'),
     path('produto/<int:id>/', views.detalhar, name='detalhar_produto'),
+    path('hardware/', views.hardware, name='hardware'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,100 @@
+
+
+.hardware-container {
+    display: flex;
+    margin: 2% 8%; 
+    gap: 20px;
+    color: white;
+}
+
+.filter-sidebar {
+    flex: 0 0 250px; 
+
+    background-color: #ffffff; 
+    color: #13132A; /* Cor do texto */
+    padding: 20px;
+    border-radius: 10px;
+    /* Faz a altura se ajustar ao conteúdo */
+    height: fit-content; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.filter-sidebar h3 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filter-group {
+    margin-bottom: 20px;
+}
+
+.filter-group h4 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    font-weight: 600;
+    /* Cor laranja do seu design */
+    color: #FF9B40; 
+}
+
+.filter-option {
+    margin-bottom: 8px;
+}
+
+.filter-option label {
+    margin-left: 8px;
+    cursor: pointer;
+}
+
+/* Estiliza o checkbox */
+.filter-option input[type="checkbox"] {
+    accent-color: #FF9B40; /* Cor do checkbox quando marcado */
+}
+
+
+.filter-button {
+    width: 100%;
+    padding: 10px;
+    /* Laranja (baseado no seu style.css) */
+    background-color: #FF9B40; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1em;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.filter-button:hover {
+    /* Laranja mais escuro (baseado no seu style.css) */
+    background-color: #D26A0B; 
+}
+
+.product-grid {
+    /* Ocupa o espaço restante */
+    flex: 1; 
+    display: grid;
+    /* Cria uma grade responsiva. Tenta encaixar o máximo de colunas de 280px */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.no-products {
+    color: white;
+    font-size: 1.2em;
+}
+
+/* Faz com que o .card (do card.css) se comporte corretamente dentro da grade.
+  O seu card.css define uma largura fixa de 280px.
+*/
+.product-grid .card {
+    width: 100%; /* Faz o card ocupar 100% da célula da grade */
+    margin: 0; /* Remove margens laterais */
+}

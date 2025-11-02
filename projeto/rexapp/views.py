@@ -28,7 +28,33 @@ def detalhar(request, id):
     return render(request, "detalhar_produto.html", {'produto': produto, 'imagens': imagens})
 
 def hardware(request):
-    return render(request, "hardware.html")
+    produtos = Produto.objects.all()
+    fabricantes_selecionados_ids = request.GET.getlist('fabricante')
+    categorias_selecionadas_ids = request.GET.getlist('categoria')
+    
+    if fabricantes_selecionados_ids:
+        produtos = produtos.filter(Fabricante_id__id__in=fabricantes_selecionados_ids)
+
+    if categorias_selecionadas_ids:
+        produtos = produtos.filter(Categoria_id__id__in=categorias_selecionadas_ids)
+
+
+    todas_categorias = Categoria.objects.all()
+    todos_fabricantes = Fabricante.objects.all()
+
+    context = {
+        'produtos': produtos, # A lista de produtos já filtrada
+        'todas_categorias': todas_categorias, # Para montar os checkboxes
+        'todos_fabricantes': todos_fabricantes, # Para montar os checkboxes
+        # Converte os IDs de string (da URL) para inteiros, para comparar no template
+        'categorias_selecionadas': [int(id) for id in categorias_selecionadas_ids],
+        'fabricantes_selecionados': [int(id) for id in fabricantes_selecionados_ids],
+        'Título': 'RexApp - Hardware'
+    }
+
+
+    return render(request, "hardware.html", context= context)
+    
 
 def login_view(request):
     if request.method == 'POST':
