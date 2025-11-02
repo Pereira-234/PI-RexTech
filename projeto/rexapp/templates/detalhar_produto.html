@@ -9,7 +9,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes do Produto - {{Produto.nome}}</title>
+    <title>Detalhes do Produto - {{produto.nome}}</title>
 </head>
 
 <body>
@@ -17,20 +17,31 @@
     <main>
         <div class="product-detail-container">
             <div class="product-images">
-                <img id = 'main-image' class="main-image" src='/media/{{imagens.0.imagem}}' alt="Premium Laptop"> 
-
                 
-                    <div class="thumbnail-images">
-                        {% for item in imagens %}
-                            <img src="/media/{{item.imagem}}" alt="Miniaturas" onclick="changeMainImage('/media/{{item.imagem}}')">
-                        {% endfor %}
-                    </div>
+                {% if produto.imagem_url %}
+                    <img id='main-image' class="main-image" src='{{ produto.imagem_url.url }}' alt="{{ produto.nome }}">
+                {% else %}
+                    <img id='main-image' class="main-image" src="{% static 'imagens/notebook.webp' %}" alt="Imagem indisponível">
+                {% endif %}
+                
+                
+                <div class="thumbnail-images">
+                    {% if produto.imagem_url %}
+                        <img src="{{ produto.imagem_url.url }}" alt="Miniatura" onclick="changeMainImage('{{ produto.imagem_url.url }}')">
+                    {% endif %}
+
+                    {% for item in imagens %}
+                        {% if item.imagem_url %}
+                            <img src="{{ item.imagem_url.url }}" alt="Miniatura" onclick="changeMainImage('{{ item.imagem_url.url }}')">
+                        {% endif %}
+                    {% endfor %}
+                </div>
                 
             </div>
 
             <div class="product-info">
                 <h1 class="product-title">{{produto.nome}}</h1>
-                <p class="product-price">{{produto.preco}}</p>
+                <p class="product-price">R$ {{produto.preco}}</p>
                 <p class="product-description">{{produto.especificacoes}}</p>
                 <button class="add-to-cart-btn">
                     <span>ADICIONAR AO CARRINHO</span>
@@ -71,14 +82,6 @@
             <button class="submit-rating-btn">ENVIAR</button>
         </div>
 
-        <!--  
-        <div class="product-specs">
-            <h2 class="specs-title">Sobre o produto</h2>
-            <p class="spec-item">Cor: galego</p>
-            <p class="spec-item">Velocidade: de um dodo</p>
-            <p class="spec-item">Dimensões: galo</p>
-        </div>
-         -->
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
