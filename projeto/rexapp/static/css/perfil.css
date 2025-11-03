@@ -1,0 +1,21 @@
+.perfil{
+    width: 40vw;
+    height: 35vh;
+    margin-left: 30%;
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+    background-color: white;
+    color: black;
+}
+
+.botao_sair{
+    background-color: black;
+    border-radius: 8px;
+    color: white;
+    width: 140%;
+    height: 120%;
+}

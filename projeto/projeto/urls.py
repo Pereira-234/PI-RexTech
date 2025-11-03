@@ -20,6 +20,7 @@ from rexapp import views
 from django.conf.urls.static import static
 from django.conf import settings
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name= 'home'),
@@ -27,4 +28,8 @@ urlpatterns = [
     path('sign-up/', views.sign_up_view, name='sign-up'),
     path('produto/<int:id>/', views.detalhar, name='detalhar_produto'),
     path('hardware/', views.hardware, name='hardware'),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('perfil/', views.perfil_view, name='perfil'),
+    path('logout/', views.logout_view, name='logout'), 
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

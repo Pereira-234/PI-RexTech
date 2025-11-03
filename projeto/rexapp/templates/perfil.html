@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block conteudo %}
+{% load static %}
+<div class="perfil">
+  <h1 class = 'titulo'>Meu Perfil</h1>
+  <img src="{% if usuario.foto %}{{ usuario.foto.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}" alt="avatar" style="width:100px;height:100px;border-radius:50%;">
+  <p><strong>Nome:</strong> {{ usuario.nome }}</p>
+  <p><strong>E-mail:</strong> {{ usuario.email }}</p>
+  
+  <form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button class="botao_sair">Sair</button>
+  </form>
+</div>
+{% endblock %}

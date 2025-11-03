@@ -1,9 +1,13 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from rexapp.models.Produto import Produto
 from rexapp.models.Categoria import Categoria
 from rexapp.models.Fabricante import Fabricante
 from rexapp.models.Imagem import Imagem
 from rexapp.models.Usuario import Usuario
+from django.contrib.auth import logout
 
 # Create your views here.
 
@@ -60,19 +64,25 @@ def login_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         senha = request.POST.get('senha')
-        lembrar = request.POST.get('captcha')
+        lembrar = request.POST.get('captcha')  # seu checkbox no template é "captcha"
 
-        user = authenticate(request, email=email, password=senha)
+        user = authenticate(request, username=email, password=senha)
+        if user is None:
+            # tenta usar email kwarg (alguns backends aceitam)
+            user = authenticate(request, email=email, password=senha)
+
         if user is not None:
-            if lembrar:  # checkbox "não sou um robô" (apenas exemplo)
-                login(request, user)
-                return redirect('home')  # redireciona para a página inicial
+            login(request, user)
+            if lembrar:
+                request.session.set_expiry(1209600)  # 2 semanas
             else:
-                messages.error(request, 'Confirme que você não é um robô.')
+                request.session.set_expiry(0)  # expira ao fechar o browser
+            return redirect('home')
         else:
-            messages.error(request, 'Email ou senha inválidos.')
+            messages.error(request, 'E-mail ou senha inválidos.')
 
     return render(request, 'login.html')
+
 
 def sign_up_view(request):
     if request.method == 'POST':
@@ -82,8 +92,8 @@ def sign_up_view(request):
         senha = request.POST.get('senha')
         senha_confirm = request.POST.get('senha_confirm')
         captcha = request.POST.get('captcha')
+        foto = request.FILES.get('foto')
 
-        
         if not captcha:
             messages.error(request, "Confirme que você não é um robô.")
             return render(request, 'sign_up.html')
@@ -100,11 +110,22 @@ def sign_up_view(request):
             messages.error(request, "Já existe uma conta com esse e-mail.")
             return render(request, 'sign_up.html')
 
-       
-        usuario = Usuario.objects.create_user(email=email, password=senha, nome=nome)
+        usuario = Usuario.objects.create_user(email=email, password=senha, nome=nome, foto=foto)
         usuario.save()
-
         messages.success(request, "Conta criada com sucesso! Faça login.")
         return redirect('login')
 
     return render(request, 'sign_up.html')
+
+@login_required
+def perfil_view(request):
+    # mostra perfil e permite navegação para editar
+    return render(request, 'perfil.html', {
+        'usuario': request.user
+    })
+
+@login_required
+def logout_view(request):
+    logout(request)  # encerra a sessão do usuário
+    messages.success(request, "Você saiu da sua conta.")
+    return redirect('login')  # redireciona pra página de login

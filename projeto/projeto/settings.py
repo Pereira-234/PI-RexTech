@@ -119,6 +119,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 AUTH_USER_MODEL = 'rexapp.Usuario'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_URL='/media/'
 MEDIA_ROOT= os.path.join(BASE_DIR, 'media')
 

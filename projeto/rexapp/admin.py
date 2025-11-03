@@ -34,7 +34,7 @@ class UsuarioAdmin(UserAdmin):
     fieldsets = (
         (
             None, # None = "Sem agrupamento"
-            {'fields': ('nome', 'email', 'password')},
+            {'fields': ('nome', 'email', 'password', 'foto')},
         ),
         (
             transl('Permissões'), # Nome do grupo de campos, usando metodo para fazer traducao
@@ -63,6 +63,7 @@ class UsuarioAdmin(UserAdmin):
                     'email', 
                     'password1', # senha
                     'password2', # confirmação da senha
+                    'foto',
                 )
             },
         ),
