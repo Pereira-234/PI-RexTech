@@ -11,9 +11,9 @@ from django.utils.html import format_html
 class UsuarioAdmin(UserAdmin):
     # define um botao para realizar a edicao
     def action_buttons(self, obj):
-        ret = format_html('<a class="btn" href="/admin/core/usuario/{}/change/">Editar</a>', obj.id) + \
+        ret = format_html('<a class="btn" href="/admin/rexapp/usuario/{}/change/">Editar</a>', obj.id) + \
               format_html('&nbsp;&nbsp;') + \
-              format_html('<a class="btn" href="/admin/core/usuario/{}/delete/">Excluir</a>', obj.id)
+              format_html('<a class="btn" href="/admin/rexapp/usuario/{}/delete/">Excluir</a>', obj.id)
         return ret
 
     # define o titulo da coluna de acoes (editar, excluir) 
