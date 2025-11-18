@@ -117,6 +117,9 @@ def sign_up_view(request):
 
     return render(request, 'sign_up.html')
 
+def carrinho_view(request):
+    produtos = Produto
+
 @login_required
 def perfil_view(request):
     # mostra perfil e permite navegação para editar
