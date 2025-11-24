@@ -1,15 +1,69 @@
 {% extends "base.html" %}
 {% block conteudo %}
 {% load static %}
-<div class="perfil">
-  <h1 class = 'titulo'>Meu Perfil</h1>
-  <img src="{% if usuario.foto %}{{ usuario.foto.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}" alt="avatar" style="width:100px;height:100px;border-radius:50%;">
-  <p><strong>Nome:</strong> {{ usuario.nome }}</p>
-  <p><strong>E-mail:</strong> {{ usuario.email }}</p>
-  
-  <form action="{% url 'logout' %}" method="post">
-    {% csrf_token %}
-    <button class="botao_sair">Sair</button>
-  </form>
+
+<div class="container-perfil">
+
+    <!-- Esquerda – Informações da Conta -->
+    <section class="info-conta">
+        <h2>Informações da Conta</h2>
+
+        <div class="avatar-box">
+            <img src="{% if usuario.foto %}{{ usuario.foto.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}" 
+                 alt="avatar" class="avatar">
+        </div>
+
+        <p><strong>Nome:</strong> {{ usuario.nome }} 
+            <a href="#"><i class="editar-icon">🖉</i></a>
+        </p>
+
+        <p><strong>E-mail:</strong> {{ usuario.email }}
+            <a href="#"><i class="editar-icon">🖉</i></a>
+        </p>
+
+        <p><strong>Senha:</strong> ********
+            <a href="#"><i class="editar-icon">🖉</i></a>
+        </p>
+
+        <p><strong>Endereço:</strong> {{ usuario.endereco }}
+            <a href="#"><i class="editar-icon">🖉</i></a>
+        </p>
+
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button class="botao_sair">Sair</button>
+        </form>
+    </section>
+
+    <!-- Direita – Meus Pedidos -->
+    <section class="meus-pedidos">
+        <h2>Meus Pedidos</h2>
+
+        <div class="lista-pedidos">
+            {% for pedido in pedidos %}
+            <div class="card-pedido">
+                <img src="{{ pedido.produto.imagem.url }}" class="img-produto">
+
+                <div class="pedido-info">
+                    <h4>{{ pedido.produto.nome }}</h4>
+                    <p class="categoria">{{ pedido.produto.categoria }}</p>
+                    <p><strong>Situação:</strong> {{ pedido.status }}</p>
+                    <p class="data"><strong>Data:</strong> {{ pedido.data }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Caixa de mensagem -->
+        <div class="mensagem">
+            <label>Alguma dúvida? Entre em contato com Deus!</label>
+            <textarea></textarea>
+            <button class="enviar-btn">Enviar</button>
+        </div>
+
+     
+    </section>
+
 </div>
+
 {% endblock %}

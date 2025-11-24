@@ -91,6 +91,8 @@ def sign_up_view(request):
         email_confirm = request.POST.get('email_confirm')
         senha = request.POST.get('senha')
         senha_confirm = request.POST.get('senha_confirm')
+        cpf = request.POST.get('cpf')
+        nascimento = request.POST.get('nascimento')
         captcha = request.POST.get('captcha')
         foto = request.FILES.get('foto')
 
@@ -110,7 +112,7 @@ def sign_up_view(request):
             messages.error(request, "Já existe uma conta com esse e-mail.")
             return render(request, 'sign_up.html')
 
-        usuario = Usuario.objects.create_user(email=email, password=senha, nome=nome, foto=foto)
+        usuario = Usuario.objects.create_user(email=email, password=senha, nome=nome, cpf=cpf, nascimento=nascimento, foto=foto)
         usuario.save()
         messages.success(request, "Conta criada com sucesso! Faça login.")
         return redirect('login')
