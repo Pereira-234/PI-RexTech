@@ -29,6 +29,7 @@ urlpatterns = [
     path('produto/<int:id>/', views.detalhar, name='detalhar_produto'),
     path('hardware/', views.hardware, name='hardware'),
     path('perfil/', views.perfil_view, name='perfil'),
+    path('perfil/editar/', views.editar_perfil_view, name='editar_perfil'),
     path('logout/', views.logout_view, name='logout'), 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 if settings.DEBUG:

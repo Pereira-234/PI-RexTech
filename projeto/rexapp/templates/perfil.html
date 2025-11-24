@@ -4,29 +4,36 @@
 
 <div class="container-perfil">
 
-    <!-- Esquerda – Informações da Conta -->
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <section class="info-conta">
         <h2>Informações da Conta</h2>
 
         <div class="avatar-box">
             <img src="{% if usuario.foto %}{{ usuario.foto.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}" 
-                 alt="avatar" class="avatar">
-        </div>
-
+                alt="avatar" class="avatar">
+            </div>
+        
         <p><strong>Nome:</strong> {{ usuario.nome }} 
-            <a href="#"><i class="editar-icon">🖉</i></a>
+            <a href="{% url 'editar_perfil' %}"><i class="editar-icon">🖉</i></a>
         </p>
 
         <p><strong>E-mail:</strong> {{ usuario.email }}
-            <a href="#"><i class="editar-icon">🖉</i></a>
+            <a href="{% url 'editar_perfil' %}"><i class="editar-icon">🖉</i></a>
         </p>
 
         <p><strong>Senha:</strong> ********
-            <a href="#"><i class="editar-icon">🖉</i></a>
+            <a href="{% url 'editar_perfil' %}"><i class="editar-icon">🖉</i></a> 
         </p>
 
-        <p><strong>Endereço:</strong> {{ usuario.endereco }}
-            <a href="#"><i class="editar-icon">🖉</i></a>
+        <p><strong>Endereço:</strong> {% if usuario.endereco %}{{ usuario.endereco }}{% else %}Não cadastrado{% endif %}
+            <a href="{% url 'editar_perfil' %}"><i class="editar-icon">🖉</i></a>
         </p>
 
         <form action="{% url 'logout' %}" method="post">

@@ -8,6 +8,7 @@ from rexapp.models.Fabricante import Fabricante
 from rexapp.models.Imagem import Imagem
 from rexapp.models.Usuario import Usuario
 from django.contrib.auth import logout
+from .forms import UsuarioPerfilForm
 
 # Create your views here.
 
@@ -118,6 +119,34 @@ def sign_up_view(request):
         return redirect('login')
 
     return render(request, 'sign_up.html')
+
+@login_required
+def editar_perfil_view(request):
+    # O objeto 'request.user' é o objeto Usuario logado
+    usuario = request.user 
+    
+    if request.method == 'POST':
+        # Instancia o formulário com os dados POST e a instância do usuário logado
+        # request.FILES é necessário para processar o upload da foto
+        form = UsuarioPerfilForm(request.POST, request.FILES, instance=usuario)
+        
+        if form.is_valid():
+            # Salva as alterações no objeto usuario, que atualiza o banco de dados
+            form.save()
+            messages.success(request, 'Seu perfil foi atualizado com sucesso! 🎉')
+            return redirect('perfil') # Redireciona para a página de visualização do perfil
+        else:
+            # Se o formulário for inválido (ex: email repetido)
+            messages.error(request, 'Erro ao atualizar o perfil. Verifique os dados.')
+            
+    else:
+        # GET request: cria o formulário preenchido com os dados atuais do usuário
+        form = UsuarioPerfilForm(instance=usuario)
+
+    return render(request, 'editar_perfil.html', {
+        'form': form,
+        'Título': 'Editar Perfil'
+    })
 
 @login_required
 def perfil_view(request):
