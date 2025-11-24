@@ -118,12 +118,17 @@ def sign_up_view(request):
 
     return render(request, 'sign_up.html')
 
-def get_carrinho_id_view(request):
-    carrinho_id = request.session.session_key
-    if not carrinho_id:
-        carrinho_id = request.session.create()
-    return carrinho_id
+def ver_carrinho_view(request):
+    if request.user.is_authenticated:
+        itens = Item.objects.filter(usuario=request.user)
+    else:
+        session_key = request.session.session_key
+        if session_key:
+            itens = Item.objects.filter(session_key=session_key)
+        else: itens = []
+    total = sum([Item.subtotal() for Item in itens])
 
+    return render(request, 'carrinho.html', {'itens': itens, 'total': total})    
 
 def adicionar_carrinho_view(request):
     produto = get_object_or_404(Produto, id=Produto.id)
@@ -138,7 +143,6 @@ def adicionar_carrinho_view(request):
         chave_sessao = request.session.session_key
 
     filtro = {'produto' : produto}
-
     if usuario:
         filtro['usuario'] = usuario
     else:
@@ -147,7 +151,16 @@ def adicionar_carrinho_view(request):
     item_existente = Item.objects.filter(**filtro).first()
 
     if item_existente:
-        
+        item_existente.quantidade += 1
+        item_existente.save()
+    else:
+        novo_item = Item(produto = produto, quantidade = 1)
+        if usuario:
+            novo_item.usuario_id = usuario
+        else:
+            novo_item.session_key = chave_sessao
+        novo_item.save()
+    return redirect('ver_carrinho')
 
 @login_required
 def perfil_view(request):
