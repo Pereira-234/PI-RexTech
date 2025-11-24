@@ -7,6 +7,7 @@ from rexapp.models.Categoria import Categoria
 from rexapp.models.Fabricante import Fabricante
 from rexapp.models.Imagem import Imagem
 from rexapp.models.Usuario import Usuario
+from rexapp.models.Itens import Item
 from django.contrib.auth import logout
 
 # Create your views here.
@@ -117,8 +118,36 @@ def sign_up_view(request):
 
     return render(request, 'sign_up.html')
 
-def carrinho_view(request):
-    produtos = Produto
+def get_carrinho_id_view(request):
+    carrinho_id = request.session.session_key
+    if not carrinho_id:
+        carrinho_id = request.session.create()
+    return carrinho_id
+
+
+def adicionar_carrinho_view(request):
+    produto = get_object_or_404(Produto, id=Produto.id)
+    
+    if request.user.is_authenticated:
+        usuario = request.user
+        chave_sessao = None 
+    else:
+        usuario = None
+        if not request.session.session_key:
+            request.session.create()
+        chave_sessao = request.session.session_key
+
+    filtro = {'produto' : produto}
+
+    if usuario:
+        filtro['usuario'] = usuario
+    else:
+        filtro['session_key'] = chave_sessao
+
+    item_existente = Item.objects.filter(**filtro).first()
+
+    if item_existente:
+        
 
 @login_required
 def perfil_view(request):
