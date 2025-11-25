@@ -126,16 +126,16 @@ def ver_carrinho_view(request):
         if session_key:
             itens = Item.objects.filter(session_key=session_key)
         else: itens = []
-    total = sum([Item.subtotal() for Item in itens])
+    total = sum([item.subtotal() for item in itens])
 
     return render(request, 'carrinho.html', {'itens': itens, 'total': total})    
 
-def adicionar_carrinho_view(request):
-    produto = get_object_or_404(Produto, id=Produto.id)
+def adicionar_carrinho_view(request, produto_id):
+    produto = get_object_or_404(Produto, pk=produto_id)
     
     if request.user.is_authenticated:
         usuario = request.user
-        chave_sessao = None 
+        chave_sessao = None     
     else:
         usuario = None
         if not request.session.session_key:
@@ -161,6 +161,16 @@ def adicionar_carrinho_view(request):
             novo_item.session_key = chave_sessao
         novo_item.save()
     return redirect('ver_carrinho')
+
+def remover_carrinho_view(request, item_id):
+    if request.user.is_authenticated:
+        item = get_object_or_404(Item, id = item_id, usuario = request.user)
+    else:
+        session_key = request.session.session_key
+        item = get_object_or_404(Item, id=item_id, session_key=session_key)
+    item.delete()
+    return redirect('ver_carrinho')
+
 
 @login_required
 def perfil_view(request):
