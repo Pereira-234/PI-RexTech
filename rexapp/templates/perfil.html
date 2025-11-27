@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block conteudo %}
+{% load static %}
+
+<div class="container-perfil">
+
+    <div id="messages-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <section class="info-conta">
+        <h2>Informações da Conta</h2>
+
+        <div class="avatar-box">
+            <img src="{% if usuario.foto %}{{ usuario.foto.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}" 
+                alt="avatar" class="avatar">
+            </div>
+        
+        <p><strong>Nome:</strong> {{ usuario.nome }} </p>
+
+        <p><strong>E-mail:</strong> {{ usuario.email }}</p>
+
+        <p><strong>Senha:</strong> ******** </p>
+
+        <p><strong>Endereço:</strong> {% if usuario.endereco %}{{ usuario.endereco }}{% else %}Não cadastrado{% endif %}</p>
+        
+        <form action="{% url 'editar_perfil' %}" method="post">
+            {% csrf_token %}
+            <button class="botao_sair">Editar Perfil</button>
+        </form>
+        
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button class="botao_sair">Sair</button>
+        </form>
+    </section>
+
+    <!-- Direita – Meus Pedidos -->
+    <section class="meus-pedidos">
+        <h2>Meus Pedidos</h2>
+
+        <div class="lista-pedidos">
+            {% for pedido in pedidos %}
+            <div class="card-pedido">
+                <img src="{{ pedido.produto.imagem.url }}" class="img-produto">
+
+                <div class="pedido-info">
+                    <h4>{{ pedido.produto.nome }}</h4>
+                    <p class="categoria">{{ pedido.produto.categoria }}</p>
+                    <p><strong>Situação:</strong> {{ pedido.status }}</p>
+                    <p class="data"><strong>Data:</strong> {{ pedido.data }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Caixa de mensagem -->
+        <div class="mensagem">
+            <label>Alguma dúvida? Entre em contato com Deus!</label>
+            <textarea></textarea>
+            <button class="enviar-btn">Enviar</button>
+        </div>
+    </section>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const messageContainer = document.getElementById('messages-container');
+        const alerts = messageContainer.querySelectorAll('.alert');
+        
+        if (alerts.length > 0) {
+            // Estilo básico para posicionar o container
+            messageContainer.style.position = 'fixed';
+            messageContainer.style.top = '20px';
+            messageContainer.style.right = '20px';
+            messageContainer.style.zIndex = '1050'; // Garante que fique acima de tudo
+
+            alerts.forEach(alert => {
+                // Estilo básico para o pop-up
+                alert.style.padding = '15px';
+                alert.style.margin = '10px 0';
+                alert.style.borderRadius = '5px';
+                alert.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+                alert.style.opacity = '1';
+                alert.style.transition = 'opacity 0.5s ease-in-out';
+
+                // Determina a cor com base na tag (você precisará de CSS para cores reais)
+                if (alert.classList.contains('alert-success')) {
+                    alert.style.backgroundColor = '#d4edda';
+                    alert.style.color = '#155724';
+                } else {
+                    alert.style.backgroundColor = '#fff3cd';
+                    alert.style.color = '#856404';
+                }
+                
+                // Faz a mensagem desaparecer após 5 segundos
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        alert.remove(); // Remove o elemento do DOM após o fade
+                    }, 500); // Espera a transição de opacidade
+                }, 5000); 
+            });
+        }
+    });
+</script>
+
+{% endblock %}

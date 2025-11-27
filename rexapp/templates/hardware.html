@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block conteudo %}
+<link rel="stylesheet" href="{% static 'css/hardware.css' %}">
+
+<div class="hardware-container">
+    
+    <aside class="filter-sidebar">
+        <h3>Filtrar <span class="filter-icon">▼</span></h3>
+        
+        <form method="GET" action="{% url 'hardware' %}">
+            
+            <div class="filter-group">
+                <h4>Fabricante</h4>
+                {% for fabricante in todos_fabricantes %}
+                <div class="filter-option">
+                    <input type="checkbox" 
+                           name="fabricante" 
+                           value="{{ fabricante.id }}" 
+                           id="fab-{{ fabricante.id }}"
+                           {% if fabricante.id in fabricantes_selecionados %}checked{% endif %}>
+                    <label for="fab-{{ fabricante.id }}">{{ fabricante.nome }}</label>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="filter-group">
+                <h4>Categoria</h4>
+                {% for categoria in todas_categorias %}
+                <div class="filter-option">
+                    <input type="checkbox" 
+                           name="categoria" 
+                           value="{{ categoria.id }}" 
+                           id="cat-{{ categoria.id }}"
+                           {% if categoria.id in categorias_selecionadas %}checked{% endif %}>
+                    <label for="cat-{{ categoria.id }}">{{ categoria.nome }}</label>
+                </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="filter-button">FILTRAR</button>
+        </form>
+    </aside>
+
+    <main class="product-grid">
+        {% if produtos %}
+            {% for produto in produtos %}
+                {% include 'components/card.html' with x=produto %}
+            {% endfor %}
+        {% else %}
+            <p class="no-products">Nenhum produto encontrado com os filtros selecionados.</p>
+        {% endif %}
+    </main>
+</div>
+{% endblock %}

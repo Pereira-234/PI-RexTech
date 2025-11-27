@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% block conteudo %}
+
+<main>
+    <div class="formcontainer2">
+
+        <form method="post" enctype="multipart/form-data" action="{% url 'sign-up' %}">
+            {% csrf_token %}
+            <h2>Crie sua conta!</h2>
+            <p>Preencha os campos para cadastrar a sua conta</p>
+
+            <input type="text" name="nome" placeholder="Seu nome completo" required>
+
+            <div class="flex-row">
+                <input type="date" name="nascimento" placeholder="Data de nascimento" />
+                <input type="text" name="cpf" placeholder="CPF" />
+            </div>
+
+            <input type="email" name="email" placeholder="E-mail" required />
+            <input type="email" name="email_confirm" placeholder="Confirmar e-mail" required />
+
+            <div class="flex-row">
+                <input type="password" name="senha" placeholder="Senha" required />
+                <input type="password" name="senha_confirm" placeholder="Confirmar senha" required />
+            </div>
+
+            <label for="foto">Escolha uma foto de perfil (opcional)</label> 
+            <br>
+            <input type="file" name="foto" id="foto" accept="image/*"> 
+
+            <div class="captcha-box">
+                <div class="h-captcha" data-sitekey="{{ HCAPTCHA_SITEKEY }}"></div>
+            </div>
+
+            <button type="submit" class="btn-green">CADASTRAR</button>
+            <hr />
+            <a href="{% url 'login' %}" class="btn-gray">LOGIN</a>
+        </form>
+    </div>
+</main>
+
+<script src="https://hcaptcha.com/1/api.js" async defer></script>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+{% block conteudo %}
+
+<main>
+    <div class="formcontainer2">
+        <form class="form-box" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <h2>Bem-vindo(a) de volta!</h2>
+            <p>Informe o seu e-mail e senha</p>
+
+            <input type="email" name="email" placeholder="Seu e-mail" required>
+            <input type="password" name="senha" placeholder="Sua senha" required>
+
+            <div class="captcha-box">
+                <div class="h-captcha" data-sitekey="{{ HCAPTCHA_SITEKEY }}"></div>
+            </div>
+
+            <button type="submit" class="btn-green">ENTRAR</button>
+            <hr />
+            <a href="{% url 'sign-up' %}" class="btn-gray">CRIAR CONTA</a>
+        </form>
+    </div>
+</main>
+
+<script src="https://hcaptcha.com/1/api.js" async defer></script>
+
+{% endblock %}
