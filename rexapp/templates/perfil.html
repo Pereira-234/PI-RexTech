@@ -30,15 +30,18 @@
 
         <p><strong>Endereço:</strong> {% if usuario.endereco %}{{ usuario.endereco }}{% else %}Não cadastrado{% endif %}</p>
         
-        <form action="{% url 'editar_perfil' %}" method="post">
-            {% csrf_token %}
-            <button class="botao_sair">Editar Perfil</button>
-        </form>
-        
-        <form action="{% url 'logout' %}" method="post">
-            {% csrf_token %}
-            <button class="botao_sair">Sair</button>
-        </form>
+        <div class="botoes">
+            <form action="{% url 'editar_perfil' %}" method="post">
+                {% csrf_token %}
+                <button class="botao_editar">Editar Perfil</button>
+            </form>
+            
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="botao_sair">Sair</button>
+            </form>
+        </div>
+
     </section>
 
     <!-- Direita – Meus Pedidos -->

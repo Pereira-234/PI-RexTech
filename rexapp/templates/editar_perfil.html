@@ -1,5 +1,103 @@
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }} 
-    <button type="submit">Salvar</button>
-</form>
+{% extends "base.html" %}
+{% block conteudo %}
+{% load static %}
+
+<div class="container-edicao">
+
+    <div id="messages-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <section class="card-edicao">
+        <h2>Editar Perfil</h2>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="avatar-edit-box">
+                <img src="{% if user.usuario.foto %}{{ user.usuario.foto.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}" 
+                    alt="Foto Atual" class="avatar-edit-img">
+                
+                <label for="{{ form.foto.id_for_label }}" class="avatar-overlay">
+                    <i class="fas fa-pencil-alt"></i> </label>
+
+                {{ form.foto }}
+            </div>
+            
+            <div class="campos-form">
+                {% for field in form %}
+                    {% if field.name != 'foto' %} 
+                        <div class="campo-grupo">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <span class="erro">{{ field.errors }}</span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <div class="botoes-edicao">
+                    <button type="submit" class="botao_salvar">Salvar Alterações</button>
+                    <a href="{% url 'perfil' %}" class="botao_cancelar">Cancelar</a> 
+                </div>
+            </div>
+        </form>
+
+    </section>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const messageContainer = document.getElementById('messages-container');
+        const alerts = messageContainer.querySelectorAll('.alert');
+        
+        if (alerts.length > 0) {
+            messageContainer.style.position = 'fixed';
+            messageContainer.style.top = '20px';
+            messageContainer.style.right = '20px';
+            messageContainer.style.zIndex = '1050';
+
+            alerts.forEach(alert => {
+                alert.style.padding = '15px';
+                alert.style.margin = '10px 0';
+                alert.style.borderRadius = '5px';
+                alert.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+                alert.style.opacity = '1';
+                alert.style.transition = 'opacity 0.5s ease-in-out';
+
+                if (alert.classList.contains('alert-success')) {
+                    alert.style.backgroundColor = '#d4edda';
+                    alert.style.color = '#155724';
+                } else {
+                    alert.style.backgroundColor = '#fff3cd';
+                    alert.style.color = '#856404';
+                }
+                
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 500);
+                }, 5000); 
+            });
+        }
+    });
+
+    // Script para esconder o input de arquivo e acionar ao clicar no overlay
+    document.addEventListener('DOMContentLoaded', () => {
+        // Esconde o input de arquivo real
+        const fotoInput = document.getElementById('id_foto');
+        if (fotoInput) {
+            fotoInput.style.display = 'none';
+        }
+    });
+</script>
+
+{% endblock %}
