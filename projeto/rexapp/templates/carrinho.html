@@ -1,8 +1,7 @@
-<!-- {% extends "base.html" %}
+{% extends "base.html" %}
 {% block conteudo %}
-{% load static %}
 
-{% endblock %} -->
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,22 +12,28 @@
     <title>Document</title>
 </head>
 <body>
-    <div>
-        <div>
-            <div>
+    <div class="container-carrinho-maior">
+        <div class="container-carrinho-itens">
+            <div class="informacoes">
                 <h2>Carrinho de Compras</h2>
-                <span>Produto</span>
-                <span>Qtd</span>
-                <span>Preço</span>    
+                <h6>Produto</h6>
+                <h6>Qtd.</h6>
+                <h6>Preço</h6>    
+            </div>
+            <div>
+
             </div>
         </div>
-        <div>
+        <div class="container-carrinho-preco">
             <h2>Resumo do pedido</h2>
-            <span>Valor subtotal: </span>
-            <span>Valor total</span>
+            <h5>Valor subtotal: </h5>
+            <h5>Valor total:</h5>
             <span><button type="button">Finalizar Pedido</button></span>
         </div>
 
     </div>
 </body>
 </html>
+
+{% endblock %} 
+

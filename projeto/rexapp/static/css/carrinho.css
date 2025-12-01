@@ -1,0 +1,21 @@
+.container-carrinho-maior{
+    display: flex;
+    justify-content: center;
+}
+
+.container-carrinho-itens{
+    margin-right: 5em;
+    background-color: white;
+    min-width: 950px;
+    min-height: 600px;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 5em;
+}
+
+.container-carrinho-preco{
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 5em;
+}
