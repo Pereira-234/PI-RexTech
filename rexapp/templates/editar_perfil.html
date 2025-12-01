@@ -21,7 +21,7 @@
             {% csrf_token %}
 
             <div class="avatar-edit-box">
-                <img src="{% if user.usuario.foto %}{{ user.usuario.foto.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}" 
+                <img src="{% if request.user.foto %}{{ request.user.foto.url }}{% else %}{% static 'imagens/default-avatar.png' %}{% endif %}" 
                     alt="Foto Atual" class="avatar-edit-img">
                 
                 <label for="{{ form.foto.id_for_label }}" class="avatar-overlay">

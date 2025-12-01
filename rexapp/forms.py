@@ -9,6 +9,7 @@ class UsuarioPerfilForm(forms.ModelForm):
         max_length=150, 
         required=False, 
         label='Nome Completo'
+    
     )
     
     # O email DEVE ser obrigatório (se for o caso)
@@ -26,6 +27,30 @@ class UsuarioPerfilForm(forms.ModelForm):
         model = Usuario
         fields = ['nome', 'email', 'endereco', 'foto']
 
+
+    def __init__(self, *args, **kwargs):
+            # 1. Captura a instância (o objeto Usuario logado)
+            instance = kwargs.get('instance', None)
+            
+            # Chama o construtor original do ModelForm
+            super().__init__(*args, **kwargs)
+
+            # 2. Itera sobre os campos e define o placeholder
+            if instance:
+                # Campos que você quer definir o placeholder com o valor atual
+                placeholder_fields = ['nome', 'email', 'endereco']
+                
+                for field_name in placeholder_fields:
+                    # Obtém o valor atual do campo na instância
+                    current_value = getattr(instance, field_name, '')
+                    
+                    # Certifica-se de que o valor é tratado como string
+                    placeholder_text = str(current_value)
+                    
+                    # Se o valor atual não estiver vazio, use-o como placeholder
+                    if placeholder_text:
+                        self.fields[field_name].widget.attrs['placeholder'] = placeholder_text
+                        
     # 2. Adicione este método para preservar dados existentes se campos opcionais forem vazios
     def save(self, commit=True):
         # Obtém a instância do modelo sem salvá-la no banco (commit=False)

@@ -11,8 +11,8 @@
     border-radius: 30px; /* Mantendo o arredondamento do seu pedido */
     padding: 30px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 400px; /* Largura fixa para o card */
-    max-width: 90%;
+    width: 40vw; /* Largura fixa para o card */
+    
 }
 
 .card-edicao h2 {
