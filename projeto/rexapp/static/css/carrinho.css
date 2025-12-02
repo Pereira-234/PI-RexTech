@@ -4,7 +4,7 @@
 }
 
 .container-carrinho-itens{
-    margin-right: 5em;
+    margin-right: 2em;
     background-color: white;
     min-width: 950px;
     min-height: 600px;
@@ -13,9 +13,26 @@
     margin-bottom: 5em;
 }
 
+span{
+    font-size: 18px;
+    color: #0a0a0a;
+}
+
+#qtd{
+    margin-right:10em;
+}
+
+#produto{
+    margin-right: 38em;
+}
+
 .container-carrinho-preco{
     background-color: white;
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 5em;
+}
+
+button{
+
 }
