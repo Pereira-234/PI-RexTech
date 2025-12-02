@@ -8,10 +8,11 @@ from rexapp.models.Fabricante import Fabricante
 from rexapp.models.Imagem import Imagem
 from rexapp.models.Usuario import Usuario
 from django.contrib.auth import logout
-from .forms import UsuarioPerfilForm
+from .forms import UsuarioPerfilForm, AvaliacaoForm
 from django.conf import settings
 import requests
-
+from django.db.models import Avg # Importa para calcular a média
+from .models import Avaliacao
 
 # Create your views here.
 
@@ -36,32 +37,48 @@ def detalhar(request, id):
     return render(request, "detalhar_produto.html", {'produto': produto, 'imagens': imagens})
 
 def hardware(request):
-    produtos = Produto.objects.all()
+    
+    try:
+        # Busca a Categoria 'Hardware' no banco de dados
+        categoria_hardware = Categoria.objects.get(nome='Hardware')
+        
+        # Inicializa a queryset APENAS com produtos dessa categoria
+        produtos = Produto.objects.filter(Categoria_id=categoria_hardware)
+        
+    except Categoria.DoesNotExist:
+        # Se a categoria 'Hardware' não existir, a lista de produtos é vazia
+        produtos = Produto.objects.none()
+
     fabricantes_selecionados_ids = request.GET.getlist('fabricante')
     categorias_selecionadas_ids = request.GET.getlist('categoria')
     
+    # Aplica o filtro de Fabricantes, se houver
     if fabricantes_selecionados_ids:
         produtos = produtos.filter(Fabricante_id__id__in=fabricantes_selecionados_ids)
 
+    # Aplica o filtro de Categorias, se houver
     if categorias_selecionadas_ids:
         produtos = produtos.filter(Categoria_id__id__in=categorias_selecionadas_ids)
 
 
-    todas_categorias = Categoria.objects.all()
-    todos_fabricantes = Fabricante.objects.all()
+    # 3. RECUPERAÇÃO DE DADOS PARA O TEMPLATE
+    todas_categorias = Categoria.objects.filter(id__in=produtos.values('Categoria_id').distinct())
+    todos_fabricantes = Fabricante.objects.filter(id__in=produtos.values('Fabricante_id').distinct())
+
+    # Se você preferir manter a lista COMPLETA de categorias/fabricantes (para filtros mais amplos), use:
+    # todas_categorias = Categoria.objects.all()
+    # todos_fabricantes = Fabricante.objects.all()
 
     context = {
-        'produtos': produtos, # A lista de produtos já filtrada
-        'todas_categorias': todas_categorias, # Para montar os checkboxes
-        'todos_fabricantes': todos_fabricantes, # Para montar os checkboxes
-        # Converte os IDs de string (da URL) para inteiros, para comparar no template
+        'produtos': produtos,
+        'todas_categorias': todas_categorias,
+        'todos_fabricantes': todos_fabricantes,
         'categorias_selecionadas': [int(id) for id in categorias_selecionadas_ids],
         'fabricantes_selecionados': [int(id) for id in fabricantes_selecionados_ids],
         'Título': 'RexApp - Hardware'
     }
 
-
-    return render(request, "hardware.html", context= context)
+    return render(request, "hardware.html", context=context)
     
 def verificar_hcaptcha(request):
     resposta_token = request.POST.get('h-captcha-response')
@@ -76,8 +93,6 @@ def verificar_hcaptcha(request):
     resp = requests.post('https://hcaptcha.com/siteverify', data=data).json()
     return resp.get('success', False)
 
-
-from django.conf import settings
 
 def login_view(request):
     if request.method == 'POST':
@@ -108,8 +123,6 @@ def login_view(request):
         "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
     })
 
-
-from django.conf import settings
 
 def sign_up_view(request):
     if request.method == 'POST':
@@ -167,6 +180,56 @@ def sign_up_view(request):
         "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
     })
 
+def detalhe_produto(request, produto_id):
+    produto = get_object_or_404(Produto, id=produto_id)
+    avaliacoes = produto.avaliacoes.all() # Pega todas as avaliações do produto
+    
+    # Calcula a média das notas
+    media_avaliacoes = avaliacoes.aggregate(Avg('nota'))['nota__avg']
+
+    form = AvaliacaoForm() # Formulário vazio para o método GET
+
+    # Verifica se o usuário já avaliou o produto
+    pode_avaliar = not request.user.is_authenticated or \
+               not Avaliacao.objects.filter(produto=produto, usuario=request.user).exists()
+    
+    contexto = {
+        'produto': produto,
+        'avaliacoes': avaliacoes,
+        'media_avaliacoes': media_avaliacoes,
+        'form': form,
+        'pode_avaliar': pode_avaliar,
+    }
+    
+    return render(request, 'seu_app/detalhe_produto.html', contexto)
+
+# Função separada para lidar com a submissão da avaliação (POST)
+@login_required
+def avaliar_produto(request, produto_id):
+    produto = get_object_or_404(Produto, id=produto_id)
+    
+    # 1. Verifica se o usuário já avaliou (segurança extra)
+    if Avaliacao.objects.filter(produto=produto, usuario=request.user).exists():
+        messages.error(request, 'Você já avaliou este produto.')
+        return redirect('detalhe_produto', produto_id=produto_id)
+
+    if request.method == 'POST':
+        form = AvaliacaoForm(request.POST)
+        if form.is_valid():
+            avaliacao = form.save(commit=False)
+            avaliacao.produto = produto
+            avaliacao.usuario = request.user
+            avaliacao.save()
+            
+            messages.success(request, 'Sua avaliação foi enviada com sucesso!')
+            return redirect('detalhe_produto', produto_id=produto_id)
+        else:
+            # Se o formulário for inválido, redireciona e mostra erro
+            messages.error(request, 'Erro ao enviar avaliação. Verifique a nota.')
+            
+    # Se não for POST ou se o formulário falhar, volta para a página de detalhes
+    return redirect('detalhe_produto', produto_id=produto_id)
+
 
 @login_required
 def editar_perfil_view(request):
@@ -206,5 +269,4 @@ def perfil_view(request):
 @login_required
 def logout_view(request):
     logout(request)  # encerra a sessão do usuário
-    messages.success(request, "Você saiu da sua conta.")
     return redirect('login')  # redireciona pra página de login

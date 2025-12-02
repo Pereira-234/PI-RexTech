@@ -1,4 +1,5 @@
 from django import forms
+from .models.Avaliacao import Avaliacao
 from .models.Usuario import Usuario
 
 class UsuarioPerfilForm(forms.ModelForm):
@@ -74,3 +75,21 @@ class UsuarioPerfilForm(forms.ModelForm):
             instance.save()
             
         return instance
+
+
+class AvaliacaoForm(forms.ModelForm):
+    # Personaliza o widget da nota para ser mais fácil de estilizar (opcional)
+    nota = forms.ChoiceField(
+        choices=Avaliacao.NOTA_CHOICES,
+        widget=forms.HiddenInput() # Oculta o input padrão, pois usaremos estrelas no CSS/JS
+    )
+    
+    class Meta:
+        model = Avaliacao
+        fields = ['nota', 'comentario']
+        widgets = {
+            'comentario': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Deixe seu comentário (opcional)'})
+        }
+        labels = {
+            'comentario': 'Comentário',
+        }

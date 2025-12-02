@@ -31,6 +31,8 @@ urlpatterns = [
     path('perfil/', views.perfil_view, name='perfil'),
     path('perfil/editar/', views.editar_perfil_view, name='editar_perfil'),
     path('logout/', views.logout_view, name='logout'), 
+    path('produto/<int:produto_id>/', views.detalhe_produto, name='detalhe_produto'),
+    path('produto/<int:produto_id>/avaliar/', views.avaliar_produto, name='avaliar_produto'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
