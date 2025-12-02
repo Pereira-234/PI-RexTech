@@ -13,8 +13,13 @@ from django.conf import settings
 import requests
 from django.db.models import Avg # Importa para calcular a média
 from .models import Avaliacao
-from .forms import ProdutoAdminForm
-
+from .forms import (
+    UsuarioPerfilForm, 
+    AvaliacaoForm, 
+    ProdutoAdminForm,
+    UsuarioAdminCreationForm,  
+    UsuarioAdminChangeForm
+)
 # Create your views here.
 
 def home(request):
@@ -376,3 +381,78 @@ def admin_produtos_list(request):
     }
     # 2. Renderiza o template de listagem
     return render(request, "admin_produtos_list.html", context)
+
+
+
+
+
+
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_usuarios_list(request):
+    """View para listar todos os usuários (READ)."""
+    usuarios = Usuario.objects.all().order_by('id')
+    
+    context = {
+        'usuarios': usuarios,
+        'Título': 'Gerenciar Usuários',
+    }
+    return render(request, "admin_usuarios_list.html", context)
+
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_usuario_add(request):
+    """View para adicionar um novo usuário (CREATE)."""
+    if request.method == 'POST':
+        form = UsuarioAdminCreationForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Usuário criado com sucesso!')
+            return redirect('admin_usuarios_list')
+        else:
+            messages.error(request, 'Erro ao criar usuário. Verifique os dados.')
+    else:
+        form = UsuarioAdminCreationForm()
+        
+    return render(request, 'admin_usuario_form.html', {'form': form, 'Título': 'Adicionar Usuário', 'is_edit': False})
+
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_usuario_edit(request, pk):
+    """View para editar um usuário existente (UPDATE)."""
+    usuario = get_object_or_404(Usuario, pk=pk)
+    
+    if request.method == 'POST':
+        form = UsuarioAdminChangeForm(request.POST, request.FILES, instance=usuario) 
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Usuário "{usuario.nome}" atualizado com sucesso!')
+            return redirect('admin_usuarios_list')
+        else:
+            messages.error(request, 'Erro ao atualizar usuário. Verifique os dados.')
+    else:
+        form = UsuarioAdminChangeForm(instance=usuario)
+
+    return render(request, 'admin_usuario_form.html', {
+        'form': form, 
+        'Título': f'Editar Usuário: {usuario.nome}',
+        'usuario': usuario,
+        'is_edit': True
+    })
+
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_usuario_delete(request, pk):
+    """View para exclusão de usuário (DELETE)."""
+    usuario = get_object_or_404(Usuario, pk=pk)
+    if request.method == 'POST':
+        if usuario == request.user:
+             messages.error(request, 'Você não pode excluir sua própria conta de administrador por aqui.')
+             return redirect('admin_usuarios_list')
+
+        nome_usuario = usuario.nome
+        usuario.delete()
+        messages.success(request, f'Usuário "{nome_usuario}" excluído permanentemente.')
+        return redirect('admin_usuarios_list')
+    
+    return redirect('admin_usuarios_list')

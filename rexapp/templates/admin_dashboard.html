@@ -1,9 +1,10 @@
 {% extends "base.html" %} 
-
 {% block conteudo %}
-<div class="container mt-5">
+{% load static %}
+
+<div class="admin-dashboard-container">
     <h2 class="mb-4">Painel de Administração RexTech</h2>
-    <p>Bem-vindo(a) ao painel de controle, **{{ request.user.nome|default:request.user.email }}**.</p>
+    <p>Bem-vindo(a) ao painel de controle, <b>{{ request.user.nome|default:request.user.email }}.</b></p>
     
     <hr>
 
@@ -28,9 +29,8 @@
                 <div class="card-body">
                     <h5 class="card-title text-success">Total de Usuários</h5>
                     <h1 class="card-text">{{ total_usuarios }}</h1>
-                    <a href="#" class="btn btn-sm btn-success mt-2 disabled">
-                        Gerenciar Usuários (Ainda não implementado)
-                    </a>
+                    <a href="{% url 'admin_usuarios_list' %}" class="btn btn-sm btn-success mt-2">
+                        Gerenciar Usuários                    </a>
                 </div>
             </div>
         </div>

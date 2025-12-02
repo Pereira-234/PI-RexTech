@@ -110,3 +110,59 @@ class ProdutoAdminForm(forms.ModelForm):
             # Recomendado usar um Textarea para campos de texto longo como 'especificacoes'
             'especificacoes': forms.Textarea(attrs={'rows': 5}),
         }
+
+class UsuarioAdminCreationForm(forms.ModelForm):
+    """
+    Formulário para o Admin criar um novo usuário. 
+    Exige senha e confirmação.
+    """
+    password = forms.CharField(label="Senha", widget=forms.PasswordInput)
+    password_confirm = forms.CharField(label="Confirmação de Senha", widget=forms.PasswordInput)
+
+    class Meta:
+        model = Usuario
+        # Inclua todos os campos que devem ser definidos na criação, 
+        # incluindo os campos de permissão.
+        fields = (
+            'email', 'nome', 'cpf', 'nascimento', 'foto', 'endereco',
+            'is_active', 'is_staff', 'is_superuser'
+        )
+
+    def clean(self):
+        """Verifica se as senhas conferem."""
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        password_confirm = cleaned_data.get("password_confirm")
+
+        if password and password != password_confirm:
+            raise forms.ValidationError("As senhas informadas não conferem.")
+        
+        return cleaned_data
+
+    def save(self, commit=True):
+        """Cria o usuário e define a senha hash."""
+        usuario = super().save(commit=False)
+        usuario.set_password(self.cleaned_data["password"])
+        if commit:
+            usuario.save()
+        return usuario
+
+# ----------------------------------------------------
+# Formulário de Edição de Usuário (Admin)
+# ----------------------------------------------------
+class UsuarioAdminChangeForm(forms.ModelForm):
+    """
+    Formulário para o Admin editar um usuário existente.
+    Não inclui a senha, que deve ser tratada separadamente.
+    """
+    class Meta:
+        model = Usuario
+        # Inclua todos os campos editáveis
+        fields = (
+            'email', 'nome', 'cpf', 'nascimento', 'foto', 'endereco',
+            'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'
+        )
+        
+    def clean_password(self):
+        # Impedir que a senha seja salva como texto simples se o campo não for explicitamente editado
+        return self.initial.get("password")
