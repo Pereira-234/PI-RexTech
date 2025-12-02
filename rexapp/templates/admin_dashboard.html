@@ -1,0 +1,53 @@
+{% extends "base.html" %} 
+
+{% block conteudo %}
+<div class="container mt-5">
+    <h2 class="mb-4">Painel de Administração RexTech</h2>
+    <p>Bem-vindo(a) ao painel de controle, **{{ request.user.nome|default:request.user.email }}**.</p>
+    
+    <hr>
+
+    <h3 class="mt-4 mb-3">Gerenciamento de Dados</h3>
+
+    <div class="row">
+        
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-primary">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">Produtos Cadastrados</h5>
+                    <h1 class="card-text">{{ total_produtos }}</h1>
+                    <a href="{% url 'admin_produtos_list' %}" class="btn btn-sm btn-primary mt-2">
+                        Gerenciar Produtos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-success">
+                <div class="card-body">
+                    <h5 class="card-title text-success">Total de Usuários</h5>
+                    <h1 class="card-text">{{ total_usuarios }}</h1>
+                    <a href="#" class="btn btn-sm btn-success mt-2 disabled">
+                        Gerenciar Usuários (Ainda não implementado)
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-info">
+                <div class="card-body">
+                    <h5 class="card-title text-info">Categorias</h5>
+                    <p class="card-text">Gerencie a estrutura de categorias do site.</p>
+                    <a href="#" class="btn btn-sm btn-info mt-2 disabled">
+                        Gerenciar Categorias
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+</div>
+{% endblock conteudo %}

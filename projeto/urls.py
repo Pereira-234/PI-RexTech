@@ -33,6 +33,12 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'), 
     path('produto/<int:produto_id>/', views.detalhe_produto, name='detalhe_produto'),
     path('produto/<int:produto_id>/avaliar/', views.avaliar_produto, name='avaliar_produto'),
+    
+    path('admin_page/', views.admin_dashboard, name='admin_dashboard'),
+    path('admin_page/produtos/', views.admin_produtos_list, name='admin_produtos_list'),
+    path('admin_page/produtos/add/', views.admin_produto_add, name='admin_produto_add'),
+    path('admin_page/produtos/edit/<int:pk>/', views.admin_produto_edit, name='admin_produto_edit'),
+    path('admin_page/produtos/delete/<int:pk>/', views.admin_produto_delete, name='admin_produto_delete'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

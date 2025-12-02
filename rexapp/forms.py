@@ -1,6 +1,7 @@
 from django import forms
 from .models.Avaliacao import Avaliacao
 from .models.Usuario import Usuario
+from .models.Produto import Produto
 
 class UsuarioPerfilForm(forms.ModelForm):
     # Campos que o usuário pode editar no perfil
@@ -92,4 +93,20 @@ class AvaliacaoForm(forms.ModelForm):
         }
         labels = {
             'comentario': 'Comentário',
+        }
+
+class ProdutoAdminForm(forms.ModelForm):
+    class Meta:
+        model = Produto
+        fields = [
+            'nome', 
+            'imagem_url', 
+            'preco', 
+            'especificacoes', 
+            'Categoria_id', 
+            'Fabricante_id',
+        ]
+        widgets = {
+            # Recomendado usar um Textarea para campos de texto longo como 'especificacoes'
+            'especificacoes': forms.Textarea(attrs={'rows': 5}),
         }

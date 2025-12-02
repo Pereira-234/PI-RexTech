@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from rexapp.models.Produto import Produto
 from rexapp.models.Categoria import Categoria
 from rexapp.models.Fabricante import Fabricante
@@ -13,6 +13,7 @@ from django.conf import settings
 import requests
 from django.db.models import Avg # Importa para calcular a média
 from .models import Avaliacao
+from .forms import ProdutoAdminForm
 
 # Create your views here.
 
@@ -270,3 +271,108 @@ def perfil_view(request):
 def logout_view(request):
     logout(request)  # encerra a sessão do usuário
     return redirect('login')  # redireciona pra página de login
+
+def is_admin_user(user):
+    # Verifica se o usuário está logado E tem a flag is_staff
+    return user.is_authenticated and user.is_staff
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_dashboard(request):
+    """
+    View principal do Painel de Administração.
+    Exibe métricas e atua como centro de navegação.
+    """
+    try:
+        # Busca a contagem de produtos e usuários para exibição no dashboard
+        total_produtos = Produto.objects.count()
+        total_usuarios = Usuario.objects.count()
+    except Exception as e:
+        # Em caso de erro (ex: tabelas ainda não migradas), use 0
+        total_produtos = 0
+        total_usuarios = 0
+
+    context = {
+        'total_produtos': total_produtos,
+        'total_usuarios': total_usuarios,
+        'Título': 'Painel de Administração',
+    }
+    return render(request, "admin_dashboard.html", context)
+
+
+
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_produto_add(request):
+    """View para adicionar um novo produto."""
+    # Como o modelo Produto tem ImageField (imagem_url), o enctype="multipart/form-data" 
+    # no template e o request.FILES na view são cruciais.
+    if request.method == 'POST':
+        form = ProdutoAdminForm(request.POST, request.FILES) 
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Produto adicionado com sucesso!')
+            return redirect('admin_produtos_list')
+        else:
+            messages.error(request, 'Erro ao adicionar produto. Verifique os dados e o upload da imagem.')
+    else:
+        form = ProdutoAdminForm()
+        
+    context = {
+        'form': form, 
+        'Título': 'Adicionar Produto',
+        'is_edit': False 
+    }
+    return render(request, 'admin_produto_form.html', context)
+
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_produto_edit(request, pk):
+    """View para editar um produto existente."""
+    produto = get_object_or_404(Produto, pk=pk)
+    
+    if request.method == 'POST':
+        # Ao editar um objeto com upload de arquivo, passe request.FILES e a instância
+        form = ProdutoAdminForm(request.POST, request.FILES, instance=produto) 
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Produto "{produto.nome}" atualizado com sucesso! 🎉')
+            return redirect('admin_produtos_list')
+        else:
+            messages.error(request, 'Erro ao atualizar produto. Verifique os dados.')
+    else:
+        form = ProdutoAdminForm(instance=produto)
+
+    context = {
+        'form': form, 
+        'Título': f'Editar Produto: {produto.nome}',
+        'produto': produto,
+        'is_edit': True
+    }
+    return render(request, 'admin_produto_form.html', context)
+
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_produto_delete(request, pk):
+    """View para exclusão de produto."""
+    produto = get_object_or_404(Produto, pk=pk)
+    if request.method == 'POST':
+        nome_produto = produto.nome
+        produto.delete()
+        messages.success(request, f'Produto "{nome_produto}" excluído permanentemente.')
+        return redirect('admin_produtos_list')
+    
+    return redirect('admin_produtos_list')
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_produtos_list(request):
+    """Lista todos os produtos no painel administrativo."""
+    
+    # 1. Busca todos os produtos (READ)
+    produtos = Produto.objects.all().order_by('id')
+    
+    context = {
+        'produtos': produtos,
+        'Título': 'Gerenciar Produtos',
+    }
+    # 2. Renderiza o template de listagem
+    return render(request, "admin_produtos_list.html", context)
