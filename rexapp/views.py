@@ -96,23 +96,33 @@ def verificar_hcaptcha(request):
         'response': resposta_token
     }
 
-    resp = requests.post('https://hcaptcha.com/siteverify', data=data).json()
-    return resp.get('success', False)
+    # Tratamento básico de exceção para a requisição
+    try:
+        resp = requests.post('https://hcaptcha.com/siteverify', data=data).json()
+        return resp.get('success', False)
+    except requests.exceptions.RequestException:
+        return False
 
 
 def login_view(request):
+    # Adicionado ao contexto para passar a chave ao template
+    context = {
+        "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
+    }
+    
     if request.method == 'POST':
 
         # --- Validação hCaptcha ---
         if not verificar_hcaptcha(request):
             messages.error(request, "Confirme que você não é um robô.")
-            return render(request, 'login.html', {
-                "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
-            })
+            return render(request, 'login.html', context) # Usa o contexto
 
         email = request.POST.get('email')
         senha = request.POST.get('senha')
-        lembrar = request.POST.get('captcha')
+        
+        # CORREÇÃO: Variável ajustada de 'captcha' para 'lembrar'.
+        # Se 'lembrar' é o nome do seu checkbox 'Lembrar de mim' no HTML.
+        lembrar = request.POST.get('lembrar') 
 
         user = authenticate(request, username=email, password=senha)
         if user is None:
@@ -125,66 +135,61 @@ def login_view(request):
         else:
             messages.error(request, 'E-mail ou senha inválidos.')
 
-    return render(request, 'login.html', {
-        "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
-    })
+    return render(request, 'login.html', context) # Usa o contexto
 
 
 def sign_up_view(request):
+    # Adicionado ao contexto para passar a chave ao template
+    context = {
+        "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
+    }
+
     if request.method == 'POST':
 
         # --- Validação hCaptcha ---
         if not verificar_hcaptcha(request):
             messages.error(request, "Confirme que você não é um robô.")
-            return render(request, 'sign_up.html', {
-                "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
-            })
+            return render(request, 'sign_up.html', context) # Usa o contexto
 
         nome = request.POST.get('nome')
         email = request.POST.get('email')
         email_confirm = request.POST.get('email_confirm')
         senha = request.POST.get('senha')
         senha_confirm = request.POST.get('senha_confirm')
-        captcha = request.POST.get('captcha')
         foto = request.FILES.get('foto')
-
-        if not captcha:
-            messages.error(request, "Confirme que você não é um robô.")
-            return render(request, 'sign_up.html', {
-                "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
-            })
-
+        nascimento = request.POST.get('nascimento')
+        cpf = request.POST.get('cpf')
+        
+        
         if email != email_confirm:
             messages.error(request, "Os e-mails não conferem.")
-            return render(request, 'sign_up.html', {
-                "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
-            })
+            return render(request, 'sign_up.html', context)
 
         if senha != senha_confirm:
             messages.error(request, "As senhas não conferem.")
-            return render(request, 'sign_up.html', {
-                "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
-            })
+            return render(request, 'sign_up.html', context)
+        
+        if not nascimento:
+            messages.error(request, "A data de nascimento é obrigatória.")
+            return render(request, 'sign_up.html', context)
 
         if Usuario.objects.filter(email=email).exists():
             messages.error(request, "Já existe uma conta com esse e-mail.")
-            return render(request, 'sign_up.html', {
-                "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
-            })
+            return render(request, 'sign_up.html', context)
 
         usuario = Usuario.objects.create_user(
             email=email,
             password=senha,
             nome=nome,
-            foto=foto
+            foto=foto,
+            cpf=cpf,
+            nascimento=nascimento
         )
         usuario.save()
         messages.success(request, "Conta criada com sucesso! Faça login.")
         return redirect('login')
 
-    return render(request, 'sign_up.html', {
-        "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
-    })
+    return render(request, 'sign_up.html', context) 
 
 def detalhe_produto(request, produto_id):
     produto = get_object_or_404(Produto, id=produto_id)

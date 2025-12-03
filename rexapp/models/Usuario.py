@@ -43,7 +43,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
                               help_text='O e-mail informado será utilizado para fazer o login no sistema.')
     nome = models.CharField(max_length=100)
     cpf = models.CharField(max_length=14, blank=False,  null=True, default=True)
-    nascimento = models.DateField()
+    nascimento = models.DateField(null=True, blank=True)
     foto = models.ImageField(upload_to='usuarios/', blank=True, null=True)
     endereco = models.CharField(max_length=255, blank=True, null=True)
     is_active = models.BooleanField(verbose_name='Ativo', default=True)

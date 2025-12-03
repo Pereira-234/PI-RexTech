@@ -1,0 +1,19 @@
+# .gitignore
+
+# 1. Variáveis de Ambiente e Segredos
+.env
+
+# 2. Arquivos de Banco de Dados
+db.sqlite3
+db copy.sqlite3
+popular_BD.sql
+
+# 3. Arquivos de Mídia e Static gerados (Se você tiver)
+/media/
+/static/ # Se você tiver uma pasta para arquivos estáticos coletados
+
+# 4. Arquivos Python/Django Comuns a Ignorar
+*.pyc
+__pycache__/
+venv/
+env/
