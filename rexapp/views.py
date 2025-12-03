@@ -158,7 +158,10 @@ def sign_up_view(request):
         senha_confirm = request.POST.get('senha_confirm')
         foto = request.FILES.get('foto')
         nascimento = request.POST.get('nascimento')
-        cpf = request.POST.get('cpf')
+        cpf_input = request.POST.get('cpf')
+        
+        # Limpar o CPF, removendo pontos e traços, antes de usar/salvar.
+        cpf_limpo = ''.join(filter(str.isdigit, cpf_input))
         
         
         if email != email_confirm:
@@ -182,15 +185,14 @@ def sign_up_view(request):
             password=senha,
             nome=nome,
             foto=foto,
-            cpf=cpf,
+            cpf=cpf_limpo, 
             nascimento=nascimento
         )
         usuario.save()
         messages.success(request, "Conta criada com sucesso! Faça login.")
         return redirect('login')
 
-    return render(request, 'sign_up.html', context) 
-
+    return render(request, 'sign_up.html', context)
 def detalhe_produto(request, produto_id):
     produto = get_object_or_404(Produto, id=produto_id)
     avaliacoes = produto.avaliacoes.all() # Pega todas as avaliações do produto
