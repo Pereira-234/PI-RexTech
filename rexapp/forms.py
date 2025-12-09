@@ -2,6 +2,7 @@ from django import forms
 from .models.Avaliacao import Avaliacao
 from .models.Usuario import Usuario
 from .models.Produto import Produto
+from .models.Categoria import Categoria
 
 class UsuarioPerfilForm(forms.ModelForm):
     # Campos que o usuário pode editar no perfil
@@ -166,3 +167,13 @@ class UsuarioAdminChangeForm(forms.ModelForm):
     def clean_password(self):
         # Impedir que a senha seja salva como texto simples se o campo não for explicitamente editado
         return self.initial.get("password")
+
+
+
+
+class CategoriaAdminForm(forms.ModelForm):
+    class Meta:
+        model = Categoria
+        # Se seu modelo Categoria tiver apenas 'nome' e 'descricao', use-os.
+        # Ajuste esta lista para os campos exatos do seu modelo Categoria.
+        fields = ['nome']

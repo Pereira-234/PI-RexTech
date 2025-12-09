@@ -44,6 +44,14 @@ urlpatterns = [
     path('admin_page/usuarios/add/', views.admin_usuario_add, name='admin_usuario_add'),
     path('admin_page/usuarios/edit/<int:pk>/', views.admin_usuario_edit, name='admin_usuario_edit'),
     path('admin_page/usuarios/delete/<int:pk>/', views.admin_usuario_delete, name='admin_usuario_delete'),
+
+    path('admin_page/categorias/', views.admin_categorias_list, name='admin_categorias_list'),
+    path('admin_page/categorias/add/', views.admin_categoria_add, name='admin_categoria_add'),
+    path('admin_page/categorias/edit/<int:pk>/', views.admin_categoria_edit, name='admin_categoria_edit'),
+    path('admin_page/categorias/delete/<int:pk>/', views.admin_categoria_delete, name='admin_categoria_delete'),
+
+
+    
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

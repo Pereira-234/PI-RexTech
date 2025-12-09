@@ -18,8 +18,11 @@ from .forms import (
     AvaliacaoForm, 
     ProdutoAdminForm,
     UsuarioAdminCreationForm,  
-    UsuarioAdminChangeForm
+    UsuarioAdminChangeForm,
+    CategoriaAdminForm
+
 )
+
 # Create your views here.
 
 def home(request):
@@ -96,33 +99,23 @@ def verificar_hcaptcha(request):
         'response': resposta_token
     }
 
-    # Tratamento básico de exceção para a requisição
-    try:
-        resp = requests.post('https://hcaptcha.com/siteverify', data=data).json()
-        return resp.get('success', False)
-    except requests.exceptions.RequestException:
-        return False
+    resp = requests.post('https://hcaptcha.com/siteverify', data=data).json()
+    return resp.get('success', False)
 
 
 def login_view(request):
-    # Adicionado ao contexto para passar a chave ao template
-    context = {
-        "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
-    }
-    
     if request.method == 'POST':
 
         # --- Validação hCaptcha ---
         if not verificar_hcaptcha(request):
             messages.error(request, "Confirme que você não é um robô.")
-            return render(request, 'login.html', context) # Usa o contexto
+            return render(request, 'login.html', {
+                "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
+            })
 
         email = request.POST.get('email')
         senha = request.POST.get('senha')
-        
-        # CORREÇÃO: Variável ajustada de 'captcha' para 'lembrar'.
-        # Se 'lembrar' é o nome do seu checkbox 'Lembrar de mim' no HTML.
-        lembrar = request.POST.get('lembrar') 
+        lembrar = request.POST.get('captcha')
 
         user = authenticate(request, username=email, password=senha)
         if user is None:
@@ -135,64 +128,67 @@ def login_view(request):
         else:
             messages.error(request, 'E-mail ou senha inválidos.')
 
-    return render(request, 'login.html', context) # Usa o contexto
+    return render(request, 'login.html', {
+        "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
+    })
 
 
 def sign_up_view(request):
-    # Adicionado ao contexto para passar a chave ao template
-    context = {
-        "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
-    }
-
     if request.method == 'POST':
 
         # --- Validação hCaptcha ---
         if not verificar_hcaptcha(request):
             messages.error(request, "Confirme que você não é um robô.")
-            return render(request, 'sign_up.html', context) # Usa o contexto
+            return render(request, 'sign_up.html', {
+                "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
+            })
 
         nome = request.POST.get('nome')
         email = request.POST.get('email')
         email_confirm = request.POST.get('email_confirm')
         senha = request.POST.get('senha')
         senha_confirm = request.POST.get('senha_confirm')
+        captcha = request.POST.get('captcha')
         foto = request.FILES.get('foto')
-        nascimento = request.POST.get('nascimento')
-        cpf_input = request.POST.get('cpf')
-        
-        # Limpar o CPF, removendo pontos e traços, antes de usar/salvar.
-        cpf_limpo = ''.join(filter(str.isdigit, cpf_input))
-        
-        
+
+        if not captcha:
+            messages.error(request, "Confirme que você não é um robô.")
+            return render(request, 'sign_up.html', {
+                "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
+            })
+
         if email != email_confirm:
             messages.error(request, "Os e-mails não conferem.")
-            return render(request, 'sign_up.html', context)
+            return render(request, 'sign_up.html', {
+                "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
+            })
 
         if senha != senha_confirm:
             messages.error(request, "As senhas não conferem.")
-            return render(request, 'sign_up.html', context)
-        
-        if not nascimento:
-            messages.error(request, "A data de nascimento é obrigatória.")
-            return render(request, 'sign_up.html', context)
+            return render(request, 'sign_up.html', {
+                "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
+            })
 
         if Usuario.objects.filter(email=email).exists():
             messages.error(request, "Já existe uma conta com esse e-mail.")
-            return render(request, 'sign_up.html', context)
+            return render(request, 'sign_up.html', {
+                "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
+            })
 
         usuario = Usuario.objects.create_user(
             email=email,
             password=senha,
             nome=nome,
-            foto=foto,
-            cpf=cpf_limpo, 
-            nascimento=nascimento
+            foto=foto
         )
         usuario.save()
         messages.success(request, "Conta criada com sucesso! Faça login.")
         return redirect('login')
 
-    return render(request, 'sign_up.html', context)
+    return render(request, 'sign_up.html', {
+        "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
+    })
+
 def detalhe_produto(request, produto_id):
     produto = get_object_or_404(Produto, id=produto_id)
     avaliacoes = produto.avaliacoes.all() # Pega todas as avaliações do produto
@@ -298,6 +294,7 @@ def admin_dashboard(request):
         # Busca a contagem de produtos e usuários para exibição no dashboard
         total_produtos = Produto.objects.count()
         total_usuarios = Usuario.objects.count()
+        total_categorias = Categoria.objects.count()
     except Exception as e:
         # Em caso de erro (ex: tabelas ainda não migradas), use 0
         total_produtos = 0
@@ -306,6 +303,7 @@ def admin_dashboard(request):
     context = {
         'total_produtos': total_produtos,
         'total_usuarios': total_usuarios,
+        'total_categorias' : total_categorias,
         'Título': 'Painel de Administração',
     }
     return render(request, "admin_dashboard.html", context)
@@ -463,3 +461,83 @@ def admin_usuario_delete(request, pk):
         return redirect('admin_usuarios_list')
     
     return redirect('admin_usuarios_list')
+
+
+
+# Assumindo que a função is_admin_user está definida...
+
+# ----------------------------------------------------
+# CRUD de Categorias
+# ----------------------------------------------------
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_categorias_list(request):
+    """View para listar todas as categorias (READ)."""
+    categorias = Categoria.objects.all().order_by('id')
+    
+    context = {
+        'categorias': categorias,
+        'Título': 'Gerenciar Categorias',
+    }
+    return render(request, "admin_categorias_list.html", context)
+
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_categoria_add(request):
+    """View para adicionar uma nova categoria (CREATE)."""
+    if request.method == 'POST':
+        form = CategoriaAdminForm(request.POST) 
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Categoria adicionada com sucesso! 🎉')
+            return redirect('admin_categorias_list')
+        else:
+            messages.error(request, 'Erro ao adicionar categoria. Verifique os dados.')
+    else:
+        form = CategoriaAdminForm()
+        
+    context = {
+        'form': form, 
+        'Título': 'Adicionar Categoria',
+        'is_edit': False 
+    }
+    return render(request, 'admin_categoria_form.html', context)
+
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_categoria_edit(request, pk):
+    """View para editar uma categoria existente (UPDATE)."""
+    categoria = get_object_or_404(Categoria, pk=pk)
+    
+    if request.method == 'POST':
+        form = CategoriaAdminForm(request.POST, instance=categoria) 
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Categoria "{categoria.nome}" atualizada com sucesso!')
+            return redirect('admin_categorias_list')
+        else:
+            messages.error(request, 'Erro ao atualizar categoria. Verifique os dados.')
+    else:
+        form = CategoriaAdminForm(instance=categoria)
+
+    context = {
+        'form': form, 
+        'Título': f'Editar Categoria: {categoria.nome}',
+        'categoria': categoria,
+        'is_edit': True
+    }
+    return render(request, 'admin_categoria_form.html', context)
+
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_categoria_delete(request, pk):
+    """View para exclusão de categoria (DELETE)."""
+    categoria = get_object_or_404(Categoria, pk=pk)
+    if request.method == 'POST':
+        nome_categoria = categoria.nome
+        categoria.delete()
+        messages.success(request, f'Categoria "{nome_categoria}" excluída permanentemente.')
+        return redirect('admin_categorias_list')
+    
+    # Se for GET, redireciona para a lista para evitar exclusão acidental
+    return redirect('admin_categorias_list')
