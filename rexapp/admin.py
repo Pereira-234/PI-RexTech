@@ -7,23 +7,25 @@ from rexapp.models.Usuario import Usuario
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as transl
 from django.utils.html import format_html
+from .forms import UsuarioAdminCreationForm, UsuarioAdminChangeForm
 # Register your models here.
 class UsuarioAdmin(UserAdmin):
     # define um botao para realizar a edicao
-    def action_buttons(self, obj):
-        ret = format_html('<a class="btn" href="/admin/rexapp/usuario/{}/change/">Editar</a>', obj.id) + \
-              format_html('&nbsp;&nbsp;') + \
-              format_html('<a class="btn" href="/admin/rexapp/usuario/{}/delete/">Excluir</a>', obj.id)
-        return ret
-
+    # def action_buttons(self, obj):
+    #     ret = format_html('<a class="btn" href="/admin/rexapp/usuario/{}/change/">Editar</a>', obj.id) + \
+    #           format_html('&nbsp;&nbsp;') + \
+    #           format_html('<a class="btn" href="/admin/rexapp/usuario/{}/delete/">Excluir</a>', obj.id)
+    #     return ret
+    add_form = UsuarioAdminCreationForm
+    form = UsuarioAdminChangeForm
     # define o titulo da coluna de acoes (editar, excluir) 
-    action_buttons.short_description = 'Ações'
+    # action_buttons.short_description = 'Ações'
 
     # define a ordenacao default dos registros
     ordering = ['nome']
     # define os campos que serao exibidos na tela de listagem
-    list_display = ['nome', 'email', 'is_active', 'is_staff', 'last_login', 'action_buttons']
-    list_display_links = None #['nome', 'email']
+    list_display = ['nome', 'email', 'is_active', 'is_staff', 'last_login']
+    list_display_links = ['nome', 'email']
     # define os campos somente de leitura
     readonly_fields = ['last_login']
 

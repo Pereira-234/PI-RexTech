@@ -40,6 +40,12 @@
                 {% csrf_token %}
                 <button class="botao_sair">Sair</button>
             </form>
+            {% if request.user.is_superuser %}
+                <form action="{% url 'admin_dashboard' %}" method="post">
+                    {% csrf_token %}
+                    <button class="botao_crud_admin">Painel de Administrador</button>
+                </form>
+            {% endif %}
         </div>
 
     </section>
