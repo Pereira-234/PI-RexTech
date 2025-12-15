@@ -33,22 +33,23 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'), 
     path('produto/<int:produto_id>/', views.detalhe_produto, name='detalhe_produto'),
     path('produto/<int:produto_id>/avaliar/', views.avaliar_produto, name='avaliar_produto'),
-    
     path('admin_page/', views.admin_dashboard, name='admin_dashboard'),
     path('admin_page/produtos/', views.admin_produtos_list, name='admin_produtos_list'),
     path('admin_page/produtos/add/', views.admin_produto_add, name='admin_produto_add'),
     path('admin_page/produtos/edit/<int:pk>/', views.admin_produto_edit, name='admin_produto_edit'),
     path('admin_page/produtos/delete/<int:pk>/', views.admin_produto_delete, name='admin_produto_delete'),
-
     path('admin_page/usuarios/', views.admin_usuarios_list, name='admin_usuarios_list'),
     path('admin_page/usuarios/add/', views.admin_usuario_add, name='admin_usuario_add'),
     path('admin_page/usuarios/edit/<int:pk>/', views.admin_usuario_edit, name='admin_usuario_edit'),
     path('admin_page/usuarios/delete/<int:pk>/', views.admin_usuario_delete, name='admin_usuario_delete'),
-
     path('admin_page/categorias/', views.admin_categorias_list, name='admin_categorias_list'),
     path('admin_page/categorias/add/', views.admin_categoria_add, name='admin_categoria_add'),
     path('admin_page/categorias/edit/<int:pk>/', views.admin_categoria_edit, name='admin_categoria_edit'),
     path('admin_page/categorias/delete/<int:pk>/', views.admin_categoria_delete, name='admin_categoria_delete'),
+    path('adicionar-carrinho/<int:produto_id>', views.adicionar_carrinho_view, name='adicionar_carrinho'), 
+    path('diminuir-carrinho/<int:produto_id>', views.diminuir_carrinho_view, name='diminuir_carrinho'),
+    path('ver-carrinho/', views.ver_carrinho_view, name='ver_carrinho'), 
+    path('remover-carrinho/<int:item_id>', views.remover_carrinho_view, name='remover_carrinho'), 
 
 
     

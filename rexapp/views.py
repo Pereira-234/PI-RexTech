@@ -403,10 +403,6 @@ def admin_produtos_list(request):
 
 
 
-
-
-
-
 @user_passes_test(is_admin_user, login_url='/login/')
 def admin_usuarios_list(request):
     """View para listar todos os usuários (READ)."""
@@ -555,3 +551,63 @@ def admin_categoria_delete(request, pk):
     
     # Se for GET, redireciona para a lista para evitar exclusão acidental
     return redirect('admin_categorias_list')
+
+def ver_carrinho_view(request):
+    if request.user.is_authenticated:
+        itens = Item.objects.filter(usuario=request.user)
+    else:
+        session_key = request.session.session_key
+        if session_key:
+            itens = Item.objects.filter(session_key=session_key)
+        else: itens = []
+    total = sum([item.subtotal() for item in itens])
+
+    return render(request, 'carrinho.html', {'itens': itens, 'total': total})    
+
+@login_required(login_url='/login/')
+def adicionar_carrinho_view(request, produto_id):
+    # 1. Buscamos o produto pelo ID que veio da URL (produto_id)
+    # Se você colocar 'id=request.user' aqui, dará o erro que você viu.
+    produto = get_object_or_404(Produto, id=produto_id) 
+
+    # 2. Verificamos se já existe um Item deste produto para este Usuário
+    # O erro 'Field id expected a number' acontece se você usar 'id=request.user' aqui embaixo.
+    # O correto é usar 'usuario=request.user'.
+    item, created = Item.objects.get_or_create(
+        produto=produto,
+        usuario=request.user, 
+        defaults={'quantidade': 1}
+    )
+
+    # 3. Se o item já existia, aumentamos a quantidade
+    if not created:
+        item.quantidade += 1
+        item.save()
+
+    return redirect('ver_carrinho')
+
+@login_required(login_url='/login/')
+def diminuir_carrinho_view(request, produto_id):
+    produto = get_object_or_404(Produto, id=produto_id)
+    
+    # Busca o item do usuário para esse produto
+    item = Item.objects.filter(usuario=request.user, produto=produto).first()
+    
+    if item:
+        if item.quantidade > 1:
+            item.quantidade -= 1
+            item.save()
+        else:
+            # Se a quantidade for 1 e clicar em menos, removemos o item
+            item.delete()
+            
+    return redirect('ver_carrinho')
+
+def remover_carrinho_view(request, item_id):
+    if request.user.is_authenticated:
+        item = get_object_or_404(Item, id = item_id, usuario = request.user)
+    else:
+        session_key = request.session.session_key
+        item = get_object_or_404(Item, id=item_id, session_key=session_key)
+    item.delete()
+    return redirect('ver_carrinho')

@@ -10,17 +10,11 @@ popular_BD.sql
 
 # 3. Arquivos de Mídia e Static gerados (Se você tiver)
 /media/
-/static/ # Se você tiver uma pasta para arquivos estáticos coletados
+/static/ 
+# Se você tiver uma pasta para arquivos estáticos coletados
 
 # 4. Arquivos Python/Django Comuns a Ignorar
 *.pyc
 __pycache__/
 venv/
 env/
-# Python
-__pycache__/
-*.pyc
-
-# Arquivos de IDE, etc.
-.vscode/
-.idea/
