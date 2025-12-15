@@ -1,4 +1,4 @@
-<<<<<<< HEAD:rexapp/templates/components/card.html
+
 {% load static %}
 
 {% for x in produtos %}
@@ -28,14 +28,13 @@
           </svg>
           {% endfor %}
       </div>
-      <button class="btn">
-          <span>+</span>
-          <img class="icon_card" src="{% static 'imagens/carrinho_produto.png' %}" height="20px" width="20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <path d="M16 10a4 4 0 01-8 0"/>
-      </button>
+      <a href="{% url 'adicionar_carrinho' x.id %}" class="btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+        <span>+</span>
+        <img class="icon_card" src="{% static 'imagens/carrinho_produto.png' %}" height="20px" width="20px" alt="Carrinho">
+    </a>
   </div>
+
+ 
 </div>
 
 {% endfor %}

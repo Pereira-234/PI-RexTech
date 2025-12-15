@@ -7,6 +7,7 @@ from rexapp.models.Categoria import Categoria
 from rexapp.models.Fabricante import Fabricante
 from rexapp.models.Imagem import Imagem
 from rexapp.models.Usuario import Usuario
+from rexapp.models.Itens import Item
 from django.contrib.auth import logout
 from .forms import UsuarioPerfilForm, AvaliacaoForm
 from django.conf import settings
