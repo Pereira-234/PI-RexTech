@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block conteudo %}
+<div class="cart-wrapper">
+    
+    <div class="container breadcrumb-custom">
+        <a href="{% url 'home' %}">Home</a> 
+        <i class="fas fa-chevron-right"></i> 
+        <span class="active">Carrinho de compras</span>
+    </div>
+
+    <div class="container cart-layout">
+        
+        <section class="cart-items-box">
+            <div class="cart-header-custom">
+                <h2><i class="fas fa-shopping-cart"></i> SEU CARRINHO</h2>
+            </div>
+
+            <div class="cart-columns-title">
+                <span class="col-prod">Produto</span>
+                <span class="col-qty text-center">Qtd.</span>
+                <span class="col-price text-right">Preço Total</span>
+            </div>
+
+            <div class="cart-list">
+                {% if itens %}
+                    {% for item in itens %}
+                    <div class="cart-row">
+                        
+                        <div class="prod-img">
+                            {% if item.produto.imagem_url %}
+                                <img src="{{ item.produto.imagem_url.url }}" alt="{{ item.produto.nome }}">
+                            {% else %}
+                                <div class="img-placeholder"><i class="fas fa-microchip"></i></div>
+                            {% endif %}
+                        </div>
+
+                        <div class="prod-info">
+                            <h3>{{ item.produto.nome }}</h3>
+                            <p class="brand-text">Fabricante: {{ item.produto.Fabricante_id.nome }}</p>
+                        </div>
+
+                        <div class="prod-controls">
+                            <div class="qty-box">
+                                
+                                <a href="{% url 'diminuir_carrinho' item.produto.id %}" class="qty-btn">-</a>
+
+                                <input type="text" value="{{ item.quantidade }}" readonly>
+                                
+                                <a href="{% url 'adicionar_carrinho' item.produto.id %}" class="qty-btn">+</a>
+                            </div>
+                            
+                            <a href="{% url 'remover_carrinho' item.id %}" class="btn-remove" title="Remover item">
+                                <i class="fas fa-trash-alt"></i> Remover
+                            </a>
+                        </div>
+
+                        <div class="prod-price">
+                            <span class="price-value">R$ {{ item.subtotal }}</span> <span class="price-unit">un: R$ {{ item.produto.preco }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-cart">
+                        <i class="fas fa-ghost"></i>
+                        <p>Seu carrinho está vazio.</p>
+                        <a href="{% url 'hardware' %}" class="link-orange">Ir às compras</a>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <aside class="cart-summary-box">
+            <h3>RESUMO</h3>
+
+            <div class="summary-line">
+                <span>Subtotal</span>
+                <span>R$ {{ total }}</span>
+            </div>
+            
+            <div class="summary-line">
+                <span>Frete</span>
+                <span class="text-orange">A calcular</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="summary-total">
+                <span>Total</span>
+                <span class="total-val">R$ {{ total }}</span>
+            </div>
+
+            <button class="btn-finalize">
+                FINALIZAR PEDIDO <i class="fas fa-check"></i>
+            </button>
+            
+            <a href="{% url 'hardware' %}" class="btn-continue">
+                CONTINUAR COMPRANDO
+            </a>
+        </aside>
+
+    </div>
+</div>
+{% endblock %}
