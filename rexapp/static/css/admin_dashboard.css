@@ -3,17 +3,10 @@
     max-width: 1200px; 
     /* Centraliza o container na página */
     margin: 40px auto; 
-    
-    /* CORREÇÃO AQUI: Fundo branco e opaco */
     background-color: white; 
-    /* Adiciona padding interno */
     padding: 30px; 
-    /* Adiciona bordas arredondadas */
     border-radius: 12px; 
-    /* Adiciona uma sombra mais forte para destacar */
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); 
-    
-    /* Ajusta a cor dos títulos internos para escuro, já que o fundo é claro */
     color: #333333; 
 }
 

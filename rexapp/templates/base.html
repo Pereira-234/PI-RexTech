@@ -23,7 +23,7 @@
     <header>
         <div class="logo">
             <a href="{% url 'home' %}" id="logo_r"><img src="{% static 'imagens\logo_header.png' %}" alt="Logo"
-                    width="60px"></a>
+                        width="60px"></a>
         </div>
         <div class="menu_meio">
             <form class="pesquisa">
@@ -94,12 +94,18 @@
         </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
-        integrity="sha256-/JqT3SQfawR5Gk7nQyvjUfV11T3h5wJ1C7qD/fF4j6I=" 
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
+    <script>
+        $(document).ready(function(){
+            
+            $('#id_cpf').mask('000.000.000-00', {reverse: false});
+            
+            $('#id_cpf').trigger('input');
+        });
+    </script>
     {% block extra_js %}
     {% endblock %}
     

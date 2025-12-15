@@ -22,6 +22,7 @@ from .forms import (
     CategoriaAdminForm
 
 )
+import re
 
 # Create your views here.
 
@@ -151,6 +152,18 @@ def sign_up_view(request):
         captcha = request.POST.get('captcha')
         foto = request.FILES.get('foto')
 
+        # --- Captura e Limpa o CPF (remove pontos e traços) ---
+        cpf_formatado = request.POST.get('cpf')
+        cpf_apenas_digitos = re.sub(r'\D', '', cpf_formatado) # Remove caracteres não-dígitos
+        
+        # Validação de 11 dígitos no backend
+        if len(cpf_apenas_digitos) != 11:
+            messages.error(request, "O CPF deve conter 11 dígitos.")
+            return render(request, 'sign_up.html', {
+                "HCAPTCHA_SITEKEY": settings.HCAPTCHA_SITEKEY
+            })
+        # ---------------------------------
+
         if not captcha:
             messages.error(request, "Confirme que você não é um robô.")
             return render(request, 'sign_up.html', {
@@ -179,6 +192,7 @@ def sign_up_view(request):
             email=email,
             password=senha,
             nome=nome,
+            cpf=cpf_apenas_digitos, 
             foto=foto
         )
         usuario.save()
