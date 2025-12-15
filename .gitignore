@@ -17,3 +17,10 @@ popular_BD.sql
 __pycache__/
 venv/
 env/
+# Python
+__pycache__/
+*.pyc
+
+# Arquivos de IDE, etc.
+.vscode/
+.idea/
