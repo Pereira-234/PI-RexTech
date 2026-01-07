@@ -33,6 +33,8 @@ urlpatterns = [
     path('adicionar-carrinho/<int:produto_id>', views.adicionar_carrinho_view, name='adicionar_carrinho'), 
     path('ver-carrinho/', views.ver_carrinho_view, name='ver_carrinho'), 
     path('remover-carrinho/<int:item_id>', views.remover_carrinho_view, name='remover_carrinho'), 
+    path('produto/<int:id>/', views.detalhar, name='detalhar'), 
+    path('produto/<int:produto_id>/avaliar/', views.avaliar_produto, name='avaliar_produto'), 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -30,8 +30,26 @@ def home(request):
 def detalhar(request, id):
     produto = get_object_or_404(Produto, pk=id)
     imagens = produto.imagens.all()  
+    avaliacoes = produto.avaliacoes.all()
+
+    media_avaliacoes = avaliacoes.aggregate(Avg('nota'))['nota__avg']
     return render(request, "detalhar_produto.html", {'produto': produto, 'imagens': imagens})
 
+    form = Avaliacoesform()
+
+    context = {
+        'produto': produto,
+        'imagens': imagens,
+        'avaliacoes': avaliacoes,
+        'media_avaliacoes': media_avaliacoes,
+        'form': form,
+        'pode_avaliar': pode_avaliar
+    }
+    return render(request, "detalhar_produto.html", context)
+
+    pode_avaliar = False
+    if request.user.is_authenticated:
+        pode_avaliar = not Avaliacao.filter(produto=produto, usuario=request.user).exists()
 def hardware(request):
     produtos = Produto.objects.all()
     fabricantes_selecionados_ids = request.GET.getlist('fabricante')
@@ -171,6 +189,26 @@ def remover_carrinho_view(request, item_id):
     item.delete()
     return redirect('ver_carrinho')
 
+@login_required(login_url='/login/') 
+def avaliar_produto(request, produto_id):
+    produto = get_object_or_404(Produto, id=produto_id)
+    
+    if request.method == 'POST':
+        if Avaliacao.objects.filter(produto=produto, usuario=request.user).exists():
+            messages.error(request, 'Você já avaliou este produto.')
+            return redirect('detalhar', id=produto_id) 
+
+        form = AvaliacaoForm(request.POST)
+        if form.is_valid():
+            avaliacao = form.save(commit=False)
+            avaliacao.produto = produto
+            avaliacao.usuario = request.user
+            avaliacao.save()
+            messages.success(request, 'Avaliação enviada com sucesso!')
+        else:
+            messages.error(request, 'Erro ao enviar avaliação. Selecione uma nota.')
+            
+    return redirect('detalhar', id=produto_id)
 
 @login_required
 def perfil_view(request):
