@@ -672,7 +672,7 @@ def adicionar_carrinho_view(request, produto_id):
         item.quantidade += 1
         item.save()
 
-    return redirect('ver_carrinho')
+    return redirect('verificar_carrinho')
 
 @login_required(login_url='/login/')
 def diminuir_carrinho_view(request, produto_id):
@@ -689,7 +689,7 @@ def diminuir_carrinho_view(request, produto_id):
             # Se a quantidade for 1 e clicar em menos, removemos o item
             item.delete()
             
-    return redirect('ver_carrinho')
+    return redirect('verificar_carrinho')
 
 def remover_carrinho_view(request, item_id):
     if request.user.is_authenticated:
@@ -698,4 +698,4 @@ def remover_carrinho_view(request, item_id):
         session_key = request.session.session_key
         item = get_object_or_404(Item, id=item_id, session_key=session_key)
     item.delete()
-    return redirect('ver_carrinho')
+    return redirect('verificar_carrinho')

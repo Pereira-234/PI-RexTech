@@ -48,7 +48,7 @@
             {% else %}
                 <a href="{% url 'login' %}" class="icon"><img src="{% static 'imagens/conta_header.png' %}" alt="Entrar" width="40px">Entrar</a>
             {% endif %}
-            <a href="carrinho.html" class="icon"><img src="{% static 'imagens\carrinho_header.png' %}" alt="1" width="40px">Carrinho</a>
+            <a href="{% url 'verificar_carrinho' %}" class="icon"><img src="{% static 'imagens\carrinho_header.png' %}" alt="1" width="40px">Carrinho</a>
         </div>
     </header>
 
