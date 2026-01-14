@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block conteudo %}
+<div class="container mt-5">
+    
+    <h2>Gerenciar Fabricantes</h2>
+    <hr>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4>Lista de Fabricantes ({{ fabricantes|length }} total)</h4>
+        <a href="{% url 'admin_fabricante_add' %}" class="btn btn-success">
+            + Adicionar Novo Fabricante
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if fabricantes %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fabricante in fabricantes %}
+                <tr>
+                    <td>{{ fabricante.id }}</td>
+                    <td><strong>{{ fabricante.nome }}</strong></td>
+                    <td>
+                        <form action="{% url 'admin_fabricante_edit' fabricante.id %}" method="get" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-info me-2" title="Editar">
+                                Editar
+                            </button>
+                        </form>
+                        
+                        <form action="{% url 'admin_fabricante_delete' fabricante.id %}" method="post" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir o fabricante: {{ fabricante.nome }}? Isso afetará os produtos relacionados!');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger" title="Excluir">
+                                Excluir
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <!-- <div class="alert alert-warning" role="alert">
+             Nenhum fabricante cadastrado no momento.
+        </div> -->
+    {% endif %}
+
+    <div class="mt-4">
+        <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">
+            &larr; Voltar ao Dashboard
+        </a>
+    </div>
+    
+</div>
+{% endblock conteudo %}

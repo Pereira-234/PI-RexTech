@@ -3,7 +3,7 @@ from .models.Avaliacao import Avaliacao
 from .models.Usuario import Usuario
 from .models.Produto import Produto
 from .models.Categoria import Categoria
-
+from .models.Fabricante import Fabricante
 class UsuarioPerfilForm(forms.ModelForm):
     # Campos que o usuário pode editar no perfil
     
@@ -174,6 +174,13 @@ class UsuarioAdminChangeForm(forms.ModelForm):
 class CategoriaAdminForm(forms.ModelForm):
     class Meta:
         model = Categoria
+        # Se seu modelo Categoria tiver apenas 'nome' e 'descricao', use-os.
+        # Ajuste esta lista para os campos exatos do seu modelo Categoria.
+        fields = ['nome']
+
+class FabricanteAdminForm(forms.ModelForm):
+    class Meta:
+        model = Fabricante
         # Se seu modelo Categoria tiver apenas 'nome' e 'descricao', use-os.
         # Ajuste esta lista para os campos exatos do seu modelo Categoria.
         fields = ['nome']

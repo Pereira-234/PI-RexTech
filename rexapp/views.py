@@ -20,7 +20,8 @@ from .forms import (
     ProdutoAdminForm,
     UsuarioAdminCreationForm,  
     UsuarioAdminChangeForm,
-    CategoriaAdminForm
+    CategoriaAdminForm,
+    FabricanteAdminForm
 
 )
 import re
@@ -310,15 +311,19 @@ def admin_dashboard(request):
         total_produtos = Produto.objects.count()
         total_usuarios = Usuario.objects.count()
         total_categorias = Categoria.objects.count()
+        total_fabricantes = Fabricante.objects.count()
     except Exception as e:
         # Em caso de erro (ex: tabelas ainda não migradas), use 0
         total_produtos = 0
         total_usuarios = 0
+        total_categorias = 0
+        total_fabricantes = 0
 
     context = {
         'total_produtos': total_produtos,
         'total_usuarios': total_usuarios,
         'total_categorias' : total_categorias,
+        'total_fabricantes': total_fabricantes,
         'Título': 'Painel de Administração',
     }
     return render(request, "admin_dashboard.html", context)
@@ -552,6 +557,88 @@ def admin_categoria_delete(request, pk):
     
     # Se for GET, redireciona para a lista para evitar exclusão acidental
     return redirect('admin_categorias_list')
+
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_fabricantes_list(request):
+    """View para listar todas as categorias (READ)."""
+    fabricantes = Fabricante.objects.all().order_by('id')
+    
+    context = {
+        'fabricantes': fabricantes,
+        'Título': 'Gerenciar Fabricantes',
+    }
+    return render(request, "admin_fabricantes_list.html", context)
+
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_fabricante_add(request):
+    """View para adicionar uma nova categoria (CREATE)."""
+    if request.method == 'POST':
+        form = FabricanteAdminForm(request.POST) 
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Fabricante adicionado com sucesso! 🎉')
+            return redirect('admin_fabricantes_list')
+        else:
+            messages.error(request, 'Erro ao adicionar fabricante. Verifique os dados.')
+    else:
+        form = FabricanteAdminForm()
+        
+    context = {
+        'form': form, 
+        'Título': 'Adicionar Fabricante',
+        'is_edit': False 
+    }
+    return render(request, 'admin_fabricante_form.html', context)
+
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_fabricante_edit(request, pk):
+    """View para editar uma categoria existente (UPDATE)."""
+    fabricante = get_object_or_404(Fabricante, pk=pk)
+    
+    if request.method == 'POST':
+        form = FabricanteAdminForm(request.POST, instance=fabricante) 
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Fabricante "{fabricante.nome}" atualizado com sucesso!')
+            return redirect('admin_fabricantes_list')
+        else:
+            messages.error(request, 'Erro ao atualizar fabricante. Verifique os dados.')
+    else:
+        form = FabricanteAdminForm(instance=fabricante)
+
+    context = {
+        'form': form, 
+        'Título': f'Editar Fabricante: {fabricante.nome}',
+        'fabricante': fabricante,
+        'is_edit': True
+    }
+    return render(request, 'admin_fabricante_form.html', context)
+
+
+@user_passes_test(is_admin_user, login_url='/login/')
+def admin_fabricante_delete(request, pk):
+    """View para exclusão de categoria (DELETE)."""
+    fabricante = get_object_or_404(Fabricante, pk=pk)
+    if request.method == 'POST':
+        nome_fabricante = fabricante.nome
+        fabricante.delete()
+        messages.success(request, f'Fabricante "{nome_fabricante}" excluída permanentemente.')
+        return redirect('admin_fabricantes_list')
+    
+    # Se for GET, redireciona para a lista para evitar exclusão acidental
+    return redirect('admin_fabricantes_list')
+
+
+
+
+
+
+
+
+
 
 def ver_carrinho_view(request):
     if request.user.is_authenticated:

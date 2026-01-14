@@ -46,6 +46,12 @@ urlpatterns = [
     path('admin_page/categorias/add/', views.admin_categoria_add, name='admin_categoria_add'),
     path('admin_page/categorias/edit/<int:pk>/', views.admin_categoria_edit, name='admin_categoria_edit'),
     path('admin_page/categorias/delete/<int:pk>/', views.admin_categoria_delete, name='admin_categoria_delete'),
+
+    path('admin_page/fabricantes/', views.admin_fabricantes_list, name='admin_fabricantes_list'),
+    path('admin_page/fabricantes/add/', views.admin_fabricante_add, name='admin_fabricante_add'),
+    path('admin_page/fabricantes/edit/<int:pk>/', views.admin_fabricante_edit, name='admin_fabricante_edit'),
+    path('admin_page/fabricantes/delete/<int:pk>/', views.admin_fabricante_delete, name='admin_fabricante_delete'),
+
     path('adicionar-carrinho/<int:produto_id>', views.adicionar_carrinho_view, name='adicionar_carrinho'), 
     path('diminuir-carrinho/<int:produto_id>', views.diminuir_carrinho_view, name='diminuir_carrinho'),
     path('ver-carrinho/', views.ver_carrinho_view, name='ver_carrinho'), 
