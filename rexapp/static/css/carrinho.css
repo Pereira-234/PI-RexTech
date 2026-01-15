@@ -7,6 +7,11 @@
     --cart-border: #e0e0e0;
 }
 
+/* Bloco Carrinho - Wrapper externo */
+
+
+
+
 /* Ajuste do container principal */
 .cart-wrapper {
     padding-bottom: 3rem;
@@ -18,13 +23,16 @@
 .breadcrumb-custom {
     padding: 1.5rem 0;
     font-size: 0.9rem;
-    color: #666;
+    color: #fff;
     display: flex;
     align-items: center;
     gap: 8px;
+    margin-left: 8%;
+    margin-right: 8%;
+    margin-bottom: 1rem;
 }
-.breadcrumb-custom a { text-decoration: none; color: #666; }
-.breadcrumb-custom .active { color: var(--cart-orange); font-weight: bold; }
+.breadcrumb-custom a { text-decoration: none; color: #fff; }
+.breadcrumb-custom .active { color: #fff; font-weight: bold; }
 .breadcrumb-custom i { font-size: 0.7rem; }
 
 /* Grid Layout */
@@ -65,7 +73,7 @@
 .cart-row:last-child { border-bottom: none; }
 
 .prod-img {
-    width: 80px; height: 80px;
+    width: 60px; height: 60px;
     border: 1px solid #eee; border-radius: 6px;
     display: flex; align-items: center; justify-content: center; padding: 5px;
 }
