@@ -1,6 +1,9 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
+from django.http.response import JsonResponse
+from django.views.generic.base import TemplateView
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
 from rexapp.models.Produto import Produto
 from rexapp.models.Categoria import Categoria
@@ -25,6 +28,9 @@ from .forms import (
 
 )
 import re
+import stripe
+from rexapp.services import criar_produto_stripe
+from django.urls import reverse
 
 # Create your views here.
 
@@ -339,8 +345,18 @@ def admin_produto_add(request):
     if request.method == 'POST':
         form = ProdutoAdminForm(request.POST, request.FILES) 
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Produto adicionado com sucesso!')
+            produto = form.save()
+            
+            # Criar produto no Stripe
+            stripe_ids = criar_produto_stripe(produto)
+            if stripe_ids:
+                produto.stripe_product_id = stripe_ids['product_id']
+                produto.stripe_price_id = stripe_ids['price_id']
+                produto.save()
+                messages.success(request, 'Produto adicionado com sucesso e sincronizado com Stripe!')
+            else:
+                messages.warning(request, 'Produto adicionado, mas houve erro ao sincronizar com Stripe.')
+            
             return redirect('admin_produtos_list')
         else:
             messages.error(request, 'Erro ao adicionar produto. Verifique os dados e o upload da imagem.')
@@ -364,8 +380,26 @@ def admin_produto_edit(request, pk):
         # Ao editar um objeto com upload de arquivo, passe request.FILES e a instância
         form = ProdutoAdminForm(request.POST, request.FILES, instance=produto) 
         if form.is_valid():
-            form.save()
-            messages.success(request, f'Produto "{produto.nome}" atualizado com sucesso! 🎉')
+            preco_anterior = Produto.objects.get(pk=pk).preco
+            produto_atualizado = form.save()
+            
+            # Se o preço mudou e já existe price_id, criar novo price no Stripe
+            if preco_anterior != produto_atualizado.preco and produto_atualizado.stripe_product_id:
+                try:
+                    preco_em_centavos = int(produto_atualizado.preco * 100)
+                    novo_price = stripe.Price.create(
+                        product=produto_atualizado.stripe_product_id,
+                        unit_amount=preco_em_centavos,
+                        currency="brl",
+                    )
+                    produto_atualizado.stripe_price_id = novo_price.id
+                    produto_atualizado.save()
+                    messages.success(request, f'Produto "{produto.nome}" atualizado com sucesso e preço sincronizado com Stripe! 🎉')
+                except stripe.error.StripeError as e:
+                    messages.warning(request, f'Produto atualizado, mas houve erro ao sincronizar preço com Stripe: {str(e)}')
+            else:
+                messages.success(request, f'Produto "{produto.nome}" atualizado com sucesso! 🎉')
+            
             return redirect('admin_produtos_list')
         else:
             messages.error(request, 'Erro ao atualizar produto. Verifique os dados.')
@@ -650,7 +684,23 @@ def ver_carrinho_view(request):
         else: itens = []
     total = sum([item.subtotal() for item in itens])
 
-    return render(request, 'carrinho.html', {'itens': itens, 'total': total})    
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    if request.method == "POST":
+        checkout_session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                    "price": "price_1Sq0DcALphXVC0PsyGsepdpl",  # enter yours here!!!
+                    "quantity": 1,
+                }
+            ],
+            mode="payment",
+            success_url=request.build_absolute_uri(reverse("success")),
+            cancel_url=request.build_absolute_uri(reverse("cancel")),
+        )
+        return redirect(checkout_session.url, code=303)
+    return render(request, 'carrinho.html', {'itens': itens, 'total': total})   
+
+      
 
 @login_required(login_url='/login/')
 def adicionar_carrinho_view(request, produto_id):
@@ -699,3 +749,70 @@ def remover_carrinho_view(request, item_id):
         item = get_object_or_404(Item, id=item_id, session_key=session_key)
     item.delete()
     return redirect('verificar_carrinho')
+
+
+
+# @csrf_exempt
+# def stripe_config(request):
+#     if request.method == 'GET':
+#         stripe_config = {'publicKey': settings.STRIPE_PUBLISHABLE_KEY}
+#         return JsonResponse(stripe_config, safe=False)
+    
+
+# @csrf_exempt
+# def create_checkout_session(request):
+#     if request.method == 'GET':
+#         domain_url = 'http://localhost:8000/'
+#         stripe.api_key = settings.STRIPE_SECRET_KEY
+#         try:
+#             # Create new Checkout Session for the order
+#             # Other optional params include:
+#             # [billing_address_collection] - to display billing address details on the page
+#             # [customer] - if you have an existing Stripe Customer ID
+#             # [payment_intent_data] - capture the payment later
+#             # [customer_email] - prefill the email input in the form
+#             # For full details see https://stripe.com/docs/api/checkout/sessions/create
+
+#             # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
+#             checkout_session = stripe.checkout.Session.create(
+#                 success_url=domain_url + 'success?session_id={CHECKOUT_SESSION_ID}',
+#                 cancel_url=domain_url + 'cancelled/',
+#                 payment_method_types=['card'],
+#                 mode='payment',
+#                 line_items=[
+#                     {
+#                         'name': 'T-shirt',
+#                         'quantity': '1',
+#                         'currency': 'usd',
+#                         'amount': '2000',
+#                     }
+#                 ]
+#             )
+#             return JsonResponse({'sessionId': checkout_session['id']})
+#         except Exception as e:
+#             return JsonResponse({'error': str(e)})
+
+# def casa(request):  # new
+#     stripe.api_key = settings.STRIPE_SECRET_KEY
+#     if request.method == "POST":
+#         checkout_session = stripe.checkout.Session.create(
+#             line_items=[
+#                 {
+#                     "price": "price_1Sq0DcALphXVC0PsyGsepdpl",  # enter yours here!!!
+#                     "quantity": 1,
+#                 }
+#             ],
+#             mode="payment",
+#             success_url=request.build_absolute_uri(reverse("success")),
+#             cancel_url=request.build_absolute_uri(reverse("cancel")),
+#         )
+#         return redirect(checkout_session.url, code=303)
+#     return render(request, "checkout.html")
+
+
+def success(request):
+    return render(request, "success.html")
+
+
+def cancel(request):
+    return render(request, "cancel.html")

@@ -57,6 +57,13 @@ urlpatterns = [
     path('ver_carrinho/', views.ver_carrinho_view, name='verificar_carrinho'), 
     path('remover-carrinho/<int:item_id>', views.remover_carrinho_view, name='remover_carrinho'), 
 
+    # path('config/', views.stripe_config, name='stripe_config'),
+    # path('create-checkout-session/', views.create_checkout_session, name='create_checkout'),
+    path('success/', views.success, name='success'),
+    path('cancel/', views.cancel, name='cancel'),
+
+    # path('casa/', views.casa, name='casa'),
+
 
     
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

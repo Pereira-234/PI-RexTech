@@ -18,6 +18,8 @@ class Produto(models.Model):
     especificacoes = models.TextField(blank=True)
     Categoria_id = models.ForeignKey(Categoria, on_delete=models.RESTRICT, related_name='categoria')
     Fabricante_id = models.ForeignKey(Fabricante, on_delete=models.RESTRICT, related_name='fabricante')
+    stripe_product_id = models.CharField(max_length=100, blank=True, null=True)
+    stripe_price_id = models.CharField(max_length=100, blank=True, null=True)
     
     def __str__(self):
         return self.nome

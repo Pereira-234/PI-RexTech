@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+<div style="text-align: center; padding: 3rem;">
+    <h1>❌ Pagamento Cancelado</h1>
+    <p style="font-size: 1.1rem; margin: 1rem 0;">Você cancelou o pagamento. Seus itens estão no carrinho.</p>
+    <a href="{% url 'verificar_carrinho' %}" class="btn" style="background: #ff6b00; color: white; padding: 1rem 2rem; text-decoration: none; border-radius: 5px; display: inline-block;">
+        Voltar ao Carrinho
+    </a>
+</div>
+{% endblock %}

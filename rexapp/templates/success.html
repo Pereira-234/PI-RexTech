@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+<div style="text-align: center; padding: 3rem;">
+    <h1>✅ Pagamento Realizado com Sucesso!</h1>
+    <p style="font-size: 1.1rem; margin: 1rem 0;">Obrigado pela sua compra!</p>
+    <a href="{% url 'home' %}" class="btn" style="background: #28a745; color: white; padding: 1rem 2rem; text-decoration: none; border-radius: 5px; display: inline-block;">
+        Voltar para Home
+    </a>
+</div>
+{% endblock %}

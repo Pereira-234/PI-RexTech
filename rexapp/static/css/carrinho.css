@@ -165,17 +165,46 @@
 
 .summary-total {
     display: flex; justify-content: space-between; align-items: center;
-    font-size: 1.2rem; font-weight: bold; color: var(--cart-dark); margin-bottom: 1.5rem;
+    font-size: 1.2rem; font-weight: bold; color: var(--cart-dark); margin-bottom: 2rem;
 }
 .total-val { color: var(--cart-orange); font-size: 1.5rem; }
 
 /* Botões */
-.btn-finalize {
-    width: 100%; padding: 1rem; background: #28a745; color: #fff;
-    border: none; border-radius: 5px; font-weight: bold; font-size: 1rem;
-    cursor: pointer; transition: 0.3s; margin-bottom: 1rem;
+.btn-box {
+    background: #f0f8f4;
+    border: 2px solid #28a745;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.15);
 }
-.btn-finalize:hover { background: #218838; }
+
+.btn-finalize {
+    display: block;
+    width: 100%;
+    padding: 1.5rem;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
+}
+
+.btn-finalize:hover { 
+    background: #218838;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+}
+
+.btn-finalize i {
+    margin-left: 8px;
+}
 
 .btn-continue {
     display: block; width: 100%; text-align: center; padding: 0.8rem;
