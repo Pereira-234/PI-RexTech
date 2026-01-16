@@ -4,6 +4,7 @@ from rexapp.models.Categoria import Categoria
 from rexapp.models.Fabricante import Fabricante
 from rexapp.models.Imagem import Imagem
 from rexapp.models.Usuario import Usuario
+from rexapp.models.Pedido import Pedido
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as transl
 from django.utils.html import format_html
@@ -63,8 +64,8 @@ class UsuarioAdmin(UserAdmin):
                 'fields': (
                     'nome',
                     'email', 
-                    'password1', # senha
-                    'password2', # confirmação da senha
+                    'password', # senha
+                    'password_confirm', # confirmação da senha
                     'foto',
                 )
             },
@@ -92,7 +93,7 @@ REGISTRA AS INTERFACES DE USUARIO DO MODULO ADMIN
 admin.site.disable_action("delete_selected")
 
 admin.site.register(Usuario, UsuarioAdmin)
-
+admin.site.register(Pedido)
 admin.site.register(Produto)
 admin.site.register(Categoria)
 admin.site.register(Fabricante)

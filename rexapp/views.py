@@ -17,6 +17,7 @@ from django.conf import settings
 import requests
 from django.db.models import Avg # Importa para calcular a média
 from .models import Avaliacao
+from rexapp.models.Pedido import Pedido
 from .forms import (
     UsuarioPerfilForm, 
     AvaliacaoForm, 
@@ -291,10 +292,14 @@ def editar_perfil_view(request):
     })
 
 @login_required
+@login_required
 def perfil_view(request):
-    # mostra perfil e permite navegação para editar
+    # Busca os pedidos do usuário logado
+    pedidos = Pedido.objects.filter(usuario=request.user)
+    
     return render(request, 'perfil.html', {
-        'usuario': request.user
+        'usuario': request.user,
+        'pedidos': pedidos
     })
 
 @login_required
@@ -684,20 +689,34 @@ def ver_carrinho_view(request):
         else: itens = []
     total = sum([item.subtotal() for item in itens])
 
-    stripe.api_key = settings.STRIPE_SECRET_KEY
+    # Se for POST, processar checkout com Stripe
     if request.method == "POST":
-        checkout_session = stripe.checkout.Session.create(
-            line_items=[
-                {
-                    "price": "price_1Sq0DcALphXVC0PsyGsepdpl",  # enter yours here!!!
-                    "quantity": 1,
-                }
-            ],
-            mode="payment",
-            success_url=request.build_absolute_uri(reverse("success")),
-            cancel_url=request.build_absolute_uri(reverse("cancel")),
-        )
-        return redirect(checkout_session.url, code=303)
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        
+        # Criar lista de line_items para o Stripe
+        line_items = []
+        for item in itens:
+            if item.produto.stripe_price_id:  # Verificar se tem price_id
+                line_items.append({
+                    "price": item.produto.stripe_price_id,  # Price ID do produto
+                    "quantity": item.quantidade,  # Quantidade do carrinho
+                })
+        
+        # Só criar sessão se houver itens com price_id
+        if line_items:
+            try:
+                checkout_session = stripe.checkout.Session.create(
+                    line_items=line_items,
+                    mode="payment",
+                    success_url=request.build_absolute_uri(reverse("success")),
+                    cancel_url=request.build_absolute_uri(reverse("cancel")),
+                )
+                return redirect(checkout_session.url, code=303)
+            except stripe.error.StripeError as e:
+                messages.error(request, f"Erro ao processar pagamento: {str(e)}")
+        else:
+            messages.error(request, "Alguns produtos não estão configurados para pagamento.")
+    
     return render(request, 'carrinho.html', {'itens': itens, 'total': total})   
 
       
@@ -811,6 +830,27 @@ def remover_carrinho_view(request, item_id):
 
 
 def success(request):
+    """
+    Página de sucesso após pagamento no Stripe.
+    Cria os pedidos baseado na sessão do carrinho.
+    """
+    if request.user.is_authenticated:
+        # Busca os itens do carrinho do usuário
+        itens = Item.objects.filter(usuario=request.user)
+        
+        # Cria um pedido para cada item no carrinho
+        for item in itens:
+            Pedido.objects.create(
+                usuario=request.user,
+                produto=item.produto,
+                quantidade=item.quantidade,
+                preco_total=item.subtotal(),
+                status='pendente'
+            )
+        
+        # Limpa o carrinho após criar os pedidos
+        itens.delete()
+    
     return render(request, "success.html")
 
 

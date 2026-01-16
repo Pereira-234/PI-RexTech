@@ -117,13 +117,20 @@ class UsuarioAdminCreationForm(forms.ModelForm):
     Formulário para o Admin criar um novo usuário. 
     Exige senha e confirmação.
     """
-    password = forms.CharField(label="Senha", widget=forms.PasswordInput)
-    password_confirm = forms.CharField(label="Confirmação de Senha", widget=forms.PasswordInput)
+    password = forms.CharField(
+        label="Senha", 
+        widget=forms.PasswordInput,
+        help_text="Digite uma senha segura."
+    )
+    password_confirm = forms.CharField(
+        label="Confirmação de Senha", 
+        widget=forms.PasswordInput,
+        help_text="Digite a mesma senha novamente."
+    )
 
     class Meta:
         model = Usuario
-        # Inclua todos os campos que devem ser definidos na criação, 
-        # incluindo os campos de permissão.
+        # Inclua todos os campos que devem ser definidos na criação
         fields = (
             'email', 'nome', 'cpf', 'nascimento', 'foto', 'endereco',
             'is_active', 'is_staff', 'is_superuser'
@@ -161,7 +168,7 @@ class UsuarioAdminChangeForm(forms.ModelForm):
         # Inclua todos os campos editáveis
         fields = (
             'email', 'nome', 'cpf', 'nascimento', 'foto', 'endereco',
-            'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'
+            'is_active', 'is_staff', 'is_superuser'
         )
         
     def clean_password(self):
