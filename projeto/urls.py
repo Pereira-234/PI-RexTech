@@ -27,6 +27,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('sign-up/', views.sign_up_view, name='sign-up'),
     path('produto/<int:id>/', views.detalhar, name='detalhar_produto'),
+    path('pesquisa/', views.pesquisa, name='pesquisa'),
     path('hardware/', views.hardware, name='hardware'),
     path('software/', views.software, name='software'),
     path('notebook/', views.notebook, name='notebook'),

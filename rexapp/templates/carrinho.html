@@ -91,19 +91,17 @@
                 </div>
 
             
-                 <a href="{% url 'home' %}" id="submitBtn" class="btn-finalize">
-                    FINALIZAR PEDIDO <i class="fas fa-check"></i>
-                </a>
+                 <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-finalize">FINALIZAR PEDIDO</button>
+                </form>
     
 
                 <a href="{% url 'hardware' %}" class="btn-continue">
                     CONTINUAR COMPRANDO
                 </a>
 
-                <form method="post">
-                    {% csrf_token %}
-                    <button type="submit">Purchase!</button>
-                </form>
+                
 
             </aside>
 

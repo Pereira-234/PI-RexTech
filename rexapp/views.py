@@ -15,7 +15,7 @@ from django.contrib.auth import logout
 from .forms import UsuarioPerfilForm, AvaliacaoForm
 from django.conf import settings
 import requests
-from django.db.models import Avg # Importa para calcular a média
+from django.db.models import Avg, Q # Importa para calcular a média
 from .models import Avaliacao
 from rexapp.models.Pedido import Pedido
 from .forms import (
@@ -54,6 +54,22 @@ def detalhar(request, id):
     produto = get_object_or_404(Produto, pk=id)
     imagens = produto.imagens.all()  
     return render(request, "detalhar_produto.html", {'produto': produto, 'imagens': imagens})
+
+
+def pesquisa(request):
+    termo_pesquisa = request.GET.get('q')
+    resultados = Produto.objects.all()
+
+    if termo_pesquisa:
+        resultados = resultados.filter(
+            Q(nome__icontains=termo_pesquisa) 
+        )
+
+    return render(request, 'pesquisa.html', {
+        'produtos': resultados, 
+        'query': termo_pesquisa
+    })
+
 
 def hardware(request):
     
