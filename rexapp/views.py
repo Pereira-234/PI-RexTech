@@ -99,6 +99,104 @@ def hardware(request):
 
     return render(request, "hardware.html", context=context)
     
+
+def software(request):
+    
+    try:
+        # Busca a Categoria 'software' no banco de dados
+        categoria_software = Categoria.objects.get(nome='Software')
+        
+        # Inicializa a queryset APENAS com produtos dessa categoria
+        produtos = Produto.objects.filter(Categoria_id=categoria_software)
+        
+    except Categoria.DoesNotExist:
+        # Se a categoria 'software' não existir, a lista de produtos é vazia
+        produtos = Produto.objects.none()
+
+    fabricantes_selecionados_ids = request.GET.getlist('fabricante')
+    categorias_selecionadas_ids = request.GET.getlist('categoria')
+    
+    # Aplica o filtro de Fabricantes, se houver
+    if fabricantes_selecionados_ids:
+        produtos = produtos.filter(Fabricante_id__id__in=fabricantes_selecionados_ids)
+
+    # Aplica o filtro de Categorias, se houver
+    if categorias_selecionadas_ids:
+        produtos = produtos.filter(Categoria_id__id__in=categorias_selecionadas_ids)
+
+
+    # 3. RECUPERAÇÃO DE DADOS PARA O TEMPLATE
+    todas_categorias = Categoria.objects.filter(id__in=produtos.values('Categoria_id').distinct())
+    todos_fabricantes = Fabricante.objects.filter(id__in=produtos.values('Fabricante_id').distinct())
+
+    # Se você preferir manter a lista COMPLETA de categorias/fabricantes (para filtros mais amplos), use:
+    # todas_categorias = Categoria.objects.all()
+    # todos_fabricantes = Fabricante.objects.all()
+
+    context = {
+        'produtos': produtos,
+        'todas_categorias': todas_categorias,
+        'todos_fabricantes': todos_fabricantes,
+        'categorias_selecionadas': [int(id) for id in categorias_selecionadas_ids],
+        'fabricantes_selecionados': [int(id) for id in fabricantes_selecionados_ids],
+        'Título': 'RexApp - Software'
+    }
+
+    return render(request, "software.html", context=context)
+
+
+def notebook(request):
+    
+    try:
+        # Busca a Categoria 'notebook' no banco de dados
+        categoria_notebook = Categoria.objects.get(nome='Notebook')
+        
+        # Inicializa a queryset APENAS com produtos dessa categoria
+        produtos = Produto.objects.filter(Categoria_id=categoria_notebook)
+        
+    except Categoria.DoesNotExist:
+        # Se a categoria 'notebook' não existir, a lista de produtos é vazia
+        produtos = Produto.objects.none()
+
+    fabricantes_selecionados_ids = request.GET.getlist('fabricante')
+    categorias_selecionadas_ids = request.GET.getlist('categoria')
+    
+    # Aplica o filtro de Fabricantes, se houver
+    if fabricantes_selecionados_ids:
+        produtos = produtos.filter(Fabricante_id__id__in=fabricantes_selecionados_ids)
+
+    # Aplica o filtro de Categorias, se houver
+    if categorias_selecionadas_ids:
+        produtos = produtos.filter(Categoria_id__id__in=categorias_selecionadas_ids)
+
+
+    # 3. RECUPERAÇÃO DE DADOS PARA O TEMPLATE
+    todas_categorias = Categoria.objects.filter(id__in=produtos.values('Categoria_id').distinct())
+    todos_fabricantes = Fabricante.objects.filter(id__in=produtos.values('Fabricante_id').distinct())
+
+    # Se você preferir manter a lista COMPLETA de categorias/fabricantes (para filtros mais amplos), use:
+    # todas_categorias = Categoria.objects.all()
+    # todos_fabricantes = Fabricante.objects.all()
+
+    context = {
+        'produtos': produtos,
+        'todas_categorias': todas_categorias,
+        'todos_fabricantes': todos_fabricantes,
+        'categorias_selecionadas': [int(id) for id in categorias_selecionadas_ids],
+        'fabricantes_selecionados': [int(id) for id in fabricantes_selecionados_ids],
+        'Título': 'RexApp - Notebook'
+    }
+
+    return render(request, "notebook.html", context=context)
+
+def sobrenos(request):
+
+    context = {
+        'Título': 'RexApp - Sobre Nós'
+    }
+
+    return render(request, "sobre.html", context=context)
+
 def verificar_hcaptcha(request):
     resposta_token = request.POST.get('h-captcha-response')
     if not resposta_token:
