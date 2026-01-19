@@ -75,24 +75,23 @@
     </main>
 
     <footer>
-        <div class="highfooter">
-            <div class="IFRN">
-                <a href="https://portal.ifrn.edu.br"><img src="{% static 'imagens\ifrn_footer.png' %}" alt="Logo do IFRN" width="250px"></a>
-            </div>
+        <div class="highfooter">     
             <div class="logo_f">
-                <a href="index.html"><img src="{% static 'imagens\logo_footer.png' %}" alt="Logo da RexTech com degradê" width="50px"></a>
+                <a href="{% url 'home' %}"><img src="{% static 'imagens\logo_footer.png' %}" alt="Logo da RexTech com degradê" width="265px"></a>
             </div>
             <div class="icons_f">
-                <a href="https://www.google.com/maps" class="icon"><img src="{% static 'imagens\maps.png' %}" alt="Logo do Google Maps" width="20px"></a>
-                <a href="#" class="icon"><img src="{% static 'imagens\gmail.png' %}" alt="Logo do Gmail" width="35px"></a>
-                <a href="https://www.instagram.com" class="icon"><img src="{% static 'imagens\instagram.png' %}" alt="Logo do Instagram" width="35px"></a>
-                <a href="https://github.com/PI-InfoWeb-CNAT/PI-RexTech" class="icon"><img src="{% static 'imagens\github.png' %}" alt="Logo do Github" width="35px"></a>
+                <a href="https://www.google.com/maps" class="icon"><img src="{% static 'imagens\maps.png' %}" alt="Logo do Google Maps" width="45px"></a>
+                <a href="#" class="icon"><img src="{% static 'imagens\gmail.png' %}" alt="Logo do Gmail" width="45px"></a>
+                <a href="https://www.instagram.com" class="icon"><img src="{% static 'imagens\instagram.png' %}" alt="Logo do Instagram" width="45px"></a>
+                <a href="https://github.com/PI-InfoWeb-CNAT/PI-RexTech" class="icon"><img src="{% static 'imagens\github.png' %}" alt="Logo do Github" width="45px"></a>
             </div>
         </div>
 
         <div class="subfooter">
-            <p id="desen">Desenvolvido pelo grupo RexTech</p>
             <a href="https://diatinf.ifrn.edu.br" id="diatinf"> <img src="{% static 'imagens\diatinf.png' %}" alt="Logo da DIATINF" width="40px" height="40px"></a>
+            <div class="IFRN">
+                <a href="https://portal.ifrn.edu.br"><img src="{% static 'imagens\ifrn_footer.png' %}" alt="Logo do IFRN" width="40px"></a>
+            </div>
             <p id="copy">Copyright ©2025</p>
         </div>
     </footer>

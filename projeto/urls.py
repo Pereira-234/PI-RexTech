@@ -50,25 +50,23 @@ urlpatterns = [
     path('admin_page/categorias/add/', views.admin_categoria_add, name='admin_categoria_add'),
     path('admin_page/categorias/edit/<int:pk>/', views.admin_categoria_edit, name='admin_categoria_edit'),
     path('admin_page/categorias/delete/<int:pk>/', views.admin_categoria_delete, name='admin_categoria_delete'),
-
     path('admin_page/fabricantes/', views.admin_fabricantes_list, name='admin_fabricantes_list'),
     path('admin_page/fabricantes/add/', views.admin_fabricante_add, name='admin_fabricante_add'),
     path('admin_page/fabricantes/edit/<int:pk>/', views.admin_fabricante_edit, name='admin_fabricante_edit'),
     path('admin_page/fabricantes/delete/<int:pk>/', views.admin_fabricante_delete, name='admin_fabricante_delete'),
-
     path('adicionar-carrinho/<int:produto_id>', views.adicionar_carrinho_view, name='adicionar_carrinho'), 
     path('diminuir-carrinho/<int:produto_id>', views.diminuir_carrinho_view, name='diminuir_carrinho'),
     path('ver_carrinho/', views.ver_carrinho_view, name='verificar_carrinho'), 
     path('remover-carrinho/<int:item_id>', views.remover_carrinho_view, name='remover_carrinho'), 
-
     # path('config/', views.stripe_config, name='stripe_config'),
     # path('create-checkout-session/', views.create_checkout_session, name='create_checkout'),
     path('success/', views.success, name='success'),
     path('cancel/', views.cancel, name='cancel'),
-
+    path('admin-dashboard/pedidos/', views.admin_pedidos_list, name='admin_pedidos_list'),
+    path('admin-dashboard/pedidos/editar/<int:pedido_id>/', views.admin_pedido_edit, name='admin_pedido_edit'),
+    path('admin-dashboard/pedidos/excluir/<int:pedido_id>/', views.admin_pedido_delete, name='admin_pedido_delete'),
     # path('casa/', views.casa, name='casa'),
-
-
+    path('pedido/cancelar/<int:pedido_id>/', views.cancelar_pedido, name='cancelar_pedido'),
     
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 if settings.DEBUG:

@@ -22,18 +22,21 @@ body{
 }
 
 header{
+    height: 19vh;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    margin-left: 8%;
-    margin-right: 8%;
-    margin-bottom: 2%;
+    margin-bottom: 4%; 
     text-decoration: none;
+    background-color: #E98C37;
 }
 
 .menu_meio{
     height: 10vh;
     margin-top: 2%;
+
 }
 
 .icons{
@@ -43,6 +46,7 @@ header{
     align-items: center; 
     padding-top: 1.5%;
     gap: 20%;
+    margin-right: 160px;
 }
 
 .icon{
@@ -57,6 +61,7 @@ header{
 .logo{
     display: flex;
     align-items: center;
+    margin-left: 160px;
 }
 
 
@@ -110,17 +115,18 @@ ul{
 
 
 footer{
-    height: 20vh;
-    background-color: #FF9B40;
+    height: 25vh;
+    background-color: #E98C37;
     justify-content: center;
-
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
 }
 
 
 .highfooter{
     height: 60%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }
 
@@ -129,38 +135,35 @@ footer{
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    margin-right: 8%;
+    margin-left: 8%;
+    margin-top: 1.5%;
+}
+
+.logo_f{
+    margin-top: 1.5%;
 }
 
 .subfooter{
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding: 5px 1vw;
-    background-color: white;
+    background-color: #D57E2E;
     position: absolute;
     bottom: 0;
- 
-}
-
-#desen{
-    padding-top: 0.5em;
-    margin-left: 8%;
 }
 
 #copy{
     padding-top: 0.5em;
-    margin-right: 8%;
+    margin-left: 2%;
+    color: white;
 }
 
 .IFRN{
     position: static;
-    margin-left: 8%;
-}
-
-.logo_f{
-    margin-right: 1%;
+    margin-left: 1%;
+    width: 20px;
 }
 
 .perfil{

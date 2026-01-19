@@ -7,13 +7,18 @@ h1{
 }
 
 div.sobre {
-  width: 40vw;
+  border-radius: 35px;
+  width: 70vw;
   margin: auto;
   background-color: white;
+  padding-left: 10%;
+  padding-right: 10%;
+  padding-top: 1%;
+  margin-top: 3%;
+  margin-bottom: 3%;
 }
 
 p.sobrenos {
-
   border-top: 2px dashed;
   border-color: blue !important;
   margin:0; padding: 30px;

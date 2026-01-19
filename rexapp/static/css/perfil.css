@@ -187,3 +187,20 @@
     border-color: #ffeeba;
 }
 
+.btn-cancelar {
+    background-color: transparent;
+    color: #ff4d4d;
+    border: 1px solid #ff4d4d;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cancelar:hover {
+    background-color: #ff4d4d;
+    color: white;
+    transform: scale(1.05);
+}

@@ -437,18 +437,21 @@ def admin_dashboard(request):
         total_usuarios = Usuario.objects.count()
         total_categorias = Categoria.objects.count()
         total_fabricantes = Fabricante.objects.count()
+        total_pedidos = Pedido.objects.count()
     except Exception as e:
         # Em caso de erro (ex: tabelas ainda não migradas), use 0
         total_produtos = 0
         total_usuarios = 0
         total_categorias = 0
         total_fabricantes = 0
+        total_pedidos = 0
 
     context = {
         'total_produtos': total_produtos,
         'total_usuarios': total_usuarios,
         'total_categorias' : total_categorias,
         'total_fabricantes': total_fabricantes,
+        'total_pedidos': total_pedidos,
         'Título': 'Painel de Administração',
     }
     return render(request, "admin_dashboard.html", context)
@@ -970,3 +973,38 @@ def success(request):
 
 def cancel(request):
     return render(request, "cancel.html")
+
+
+def admin_pedidos_list(request):
+    pedidos = Pedido.objects.all()
+    return render(request, 'admin_pedidos_list.html', {'pedidos': pedidos})
+
+def admin_pedido_edit(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    if request.method == 'POST':
+        novo_status = request.POST.get('status')
+        pedido.status = novo_status
+        pedido.save()
+        messages.success(request, f"Status do pedido #{pedido.id} atualizado com sucesso!")
+        return redirect('admin_pedidos_list')
+    
+    return render(request, 'admin_pedido_edit.html', {'pedido': pedido})
+
+def admin_pedido_delete(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    if request.method == 'POST':
+        pedido.delete()
+        messages.success(request, "Pedido excluído com sucesso!")
+    return redirect('admin_pedidos_list')
+
+@login_required
+def cancelar_pedido(request, pedido_id):
+    # Garante que o usuário só cancele os próprios pedidos
+    pedido = get_object_or_404(Pedido, id=pedido_id, usuario=request.user)
+    
+    if pedido.status != 'entregue':
+        pedido.status = 'cancelado'
+        pedido.save()
+        # Opcional: Adicionar mensagem de sucesso
+    
+    return redirect('perfil') # Ou o nome da sua view de lista de pedidos

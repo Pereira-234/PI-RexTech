@@ -64,6 +64,17 @@
             </div>
         </div>
 
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-warning">
+                <div class="card-body">
+                    <h5 class="card-title text-warning">Pedidos Realizados</h5>
+                    <h1 class="card-text">{{ pedidos.count|default:total_pedidos }}</h1> 
+                    <a href="{% url 'admin_pedidos_list' %}" class="btn btn-sm btn-warning mt-2">
+                        Gerenciar Pedidos
+                    </a>
+                </div>
+            </div>
+        </div>
         
     </div>
 

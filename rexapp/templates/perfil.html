@@ -57,13 +57,24 @@
         <div class="lista-pedidos">
             {% for pedido in pedidos %}
             <div class="card-pedido">
-                <img src="{{ pedido.produto.imagem.url }}" class="img-produto">
+                <img src="{{ pedido.produto.imagem_url }}" class="img-produto">
 
                 <div class="pedido-info">
                     <h4>{{ pedido.produto.nome }}</h4>
                     <p class="categoria">{{ pedido.produto.categoria }}</p>
                     <p><strong>Situação:</strong> {{ pedido.status }}</p>
-                    <p class="data"><strong>Data:</strong> {{ pedido.data }}</p>
+                    <p class="data"><strong>Data:</strong> {{ pedido.data_pedido }}</p>
+                    <p class="data"><strong>Preço total:</strong> {{ pedido.preco_total }}</p>
+                    {% if pedido.status != 'entregue' and pedido.status != 'cancelado' %}
+                        <form action="{% url 'cancelar_pedido' pedido.id %}" method="post" style="margin-top: 10px;">
+                            {% csrf_token %}
+                            <button type="submit" 
+                                    class="btn-cancelar" 
+                                    onclick="return confirm('Tem certeza que deseja cancelar este pedido?')">
+                                Cancelar Pedido
+                            </button>
+                        </form>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
